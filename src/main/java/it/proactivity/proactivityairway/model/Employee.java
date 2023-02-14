@@ -27,7 +27,7 @@ public class Employee {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "date_of_birthday")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Column(name = "ral")

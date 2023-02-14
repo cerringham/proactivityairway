@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "fleet")
+@Table(name = "ticket")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,7 +19,7 @@ public class Ticket {
     private Long id;
 
     @ManyToOne
-    private Fleet fleet;
+    private Flight flight;
 
     @ManyToOne
     private Customer customer;

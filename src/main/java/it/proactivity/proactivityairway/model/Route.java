@@ -19,10 +19,10 @@ public class Route {
     private Long id;
 
     @Column(name = "departure")
-    private Airport departure;
+    private Long departure;
 
     @Column(name = "arrival")
-    private Airport arrival;
+    private Long arrival;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "route_id")

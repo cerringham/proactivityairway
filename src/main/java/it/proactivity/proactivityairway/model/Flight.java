@@ -31,7 +31,7 @@ public class Flight {
     private String arrivalTime;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ticket_id")
+    @JoinColumn(name = "flight_id")
     private List<Ticket> ticketList;
 
     @Override
