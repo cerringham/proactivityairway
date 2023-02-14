@@ -43,7 +43,7 @@ public class Customer {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "date_of_birthday")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Column(name = "handicap")

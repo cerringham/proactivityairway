@@ -142,3 +142,20 @@ VALUES('Tokio-Haneda Airport', 'HND', 'Hanedakuko, Ōta, Tokyo 144-0041', 'Tokio
 
  INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
  VALUES(3, 2, '09.38', '17.06');
+
+
+
+ INSERT INTO ticket(customer_id, flight_id, seat_code)
+ VALUES(3, 5, '44a');
+
+ INSERT INTO ticket(customer_id, flight_id, seat_code)
+ VALUES(2, 4, '14a');
+
+ INSERT INTO ticket(customer_id, flight_id, seat_code)
+ VALUES(1, 4, '22c');
+
+ INSERT INTO ticket(customer_id, flight_id, seat_code)
+ VALUES(3, 1, '22c');
+
+ INSERT INTO ticket(customer_id, flight_id, seat_code)
+ VALUES(3, 4, '12b');
