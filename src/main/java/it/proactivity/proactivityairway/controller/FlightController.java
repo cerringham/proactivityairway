@@ -1,7 +1,6 @@
 package it.proactivity.proactivityairway.controller;
 
 import it.proactivity.proactivityairway.model.Flight;
-import it.proactivity.proactivityairway.service.FleetService;
 import it.proactivity.proactivityairway.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

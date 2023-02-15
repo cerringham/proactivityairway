@@ -1,0 +1,13 @@
+8 Clayton Nunez claytonnunez@gmail.com Facchino 1800.0
+9 Alfredo Gardner alfredogardner@gmail.com Steward 2500.0
+10 Velma Wilson velmawillson@gmail.com Hostess 2500.0
+3 Tricia Miller triciamiller@gmail.com C.D.A 2700.0
+4 Iris Martinez irismartinez@gmail.com C.D.A 2700.0
+5 Martin Leonard martinleo@gmail.com C.D.A 2700.0
+1 Arlene Ramirez arleramirez@gmail.com Pilota 2800.0
+6 Nora Bass norabass@gmail.com Pilota 2800.0
+7 Eddie Stokes eddiestokes@gmail.com Pilota 2800.0
+2 Jaime Washington jaimewash@gmail.com Presidente 3800.0
+17 Alessio Cassarino costanzo@costanzo.it Pilota 70000.5
+19 Alessio Cassarino alessio@alessio.it Pilota 70000.5
+20 Luigi Cerrato luigi@luigi.it tecnico 70000.5

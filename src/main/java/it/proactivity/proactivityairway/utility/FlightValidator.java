@@ -6,7 +6,7 @@ public class FlightValidator {
 
     public Boolean validateFromAndToDate(LocalDate from, LocalDate to) {
         if (from == null || to == null) {
-            throw new IllegalArgumentException("From and to can't be null");
+            return false;
         }
         if (from.isAfter(to)) {
             return false;

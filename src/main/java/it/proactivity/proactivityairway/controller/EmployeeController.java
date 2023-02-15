@@ -19,12 +19,12 @@ public class EmployeeController {
         return employeeService.insertEmployee(employeeDto);
     }
 
-    @RequestMapping(value = "/delete-employee/{id}", method = RequestMethod.DELETE)
+    @GetMapping(value = "/delete-employee/{id}")
     public ResponseEntity deleteEmployeeFromId(@PathVariable Long id) {
         return employeeService.deleteEmployeeFromId(id);
     }
 
-    @RequestMapping(value = "/delete-employee-from-idList", method = RequestMethod.DELETE)
+    @GetMapping(value = "/delete-employee-from-idList")
     public ResponseEntity deleteEmployeeFromIdList(@RequestBody List<Long> idList) {
         return employeeService.deleteByIdList(idList);
     }

@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-    @Query("SELECT f FROM Flight f WHERE f.flightDate >= :fromDate AND f.flightDate <= :toDate")
+    @Query("SELECT f FROM Flight f INNER JOIN FETCH f.ticketList WHERE f.flightDate >= :fromDate AND f.flightDate <= :toDate")
     List<Flight> findFlightFromAndToDate(@Param("fromDate") LocalDate parseFrom, @Param("toDate") LocalDate parseTo);
 }

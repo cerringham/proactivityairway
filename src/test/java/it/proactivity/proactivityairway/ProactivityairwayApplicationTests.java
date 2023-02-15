@@ -12,6 +12,7 @@ import it.proactivity.proactivityairway.repository.FlightRepository;
 import it.proactivity.proactivityairway.repository.TaskRepository;
 import it.proactivity.proactivityairway.service.EmployeeService;
 import it.proactivity.proactivityairway.service.FleetService;
+import it.proactivity.proactivityairway.service.FlightService;
 import it.proactivity.proactivityairway.service.TicketService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ class ProactivityairwayApplicationTests {
     EmployeeService employeeService;
 
     @Autowired
-    FlightRepository flightRepository;
+    FlightService flightService;
     @Test
     void contextLoads() {
     }
@@ -383,13 +384,71 @@ class ProactivityairwayApplicationTests {
    }
 
    @Test
-    void test() {
-        List<Flight> flightList = flightRepository.findFlightFromAndToDate(LocalDate.of(2023,1,12),
-                LocalDate.of(2023,9,11));
+    void findFlightsFromAndToDatePositiveTest() {
+        ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate("2023-01-12", "2023-09-11");
 
-       System.out.println(flightList.size());
-        flightList.stream().forEach(System.out::println);
+
+        List<Flight> flights = flightList.getBody();
+        flights.stream().forEach(System.out::println);
    }
+
+    @Test
+    void findFlightsFromAndToDateFromaDateNullTest() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate(null, "2023-09-11");
+
+        });
+
+        String message = "date can't be null or empty";
+
+        assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    void findFlightsFromAndToDateFromaDateEmptyTest() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate("", "2023-09-11");
+
+        });
+
+        String message = "date can't be null or empty";
+
+        assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    void findFlightsFromAndToDateToDateNullTest() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate("2023-01-12", null);
+
+        });
+
+        String message = "date can't be null or empty";
+
+        assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    void findFlightsFromAndToDateToDateEmptyTest() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate("2023-01-12", "");
+
+        });
+
+        String message = "date can't be null or empty";
+
+        assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    void findFlightsFromAndToDateWrongFormatTest() {
+
+        ResponseEntity<List<Flight>> flightList = flightService.findFlightsFromAndToDate("12-01-2023", "2023-09-11");
+        ResponseEntity responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        assertEquals(flightList.getStatusCode(), responseEntity.getStatusCode());
+
+    }
 
 
 

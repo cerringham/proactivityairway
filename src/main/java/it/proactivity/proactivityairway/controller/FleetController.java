@@ -18,7 +18,7 @@ public class FleetController {
         return fleetService.insertFleet(fleetDto);
     }
 
-    @RequestMapping(value = "delete-fleet", method = RequestMethod.DELETE)
+    @GetMapping(value = "delete-fleet")
     public ResponseEntity deleteFleet(@RequestParam String airplaneModel) {
         return fleetService.deleteFleetFromAirplaneModel(airplaneModel);
     }
