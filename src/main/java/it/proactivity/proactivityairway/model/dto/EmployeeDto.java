@@ -15,13 +15,15 @@ public class EmployeeDto {
     private Long id;
     private String name;
     private String surname;
+    private String email;
     private LocalDate dateOfBirth;
     private Float ral;
-    private Task task;
+    private String task;
 
-    public EmployeeDto(String name, String surname, LocalDate dateOfBirth, Float ral, Task task) {
+    public EmployeeDto(String name, String surname, String email, LocalDate dateOfBirth, Float ral, String task) {
         this.name = name;
         this.surname = surname;
+        this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.ral = ral;
         this.task = task;

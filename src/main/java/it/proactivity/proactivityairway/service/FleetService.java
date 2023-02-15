@@ -1,7 +1,7 @@
 package it.proactivity.proactivityairway.service;
 
 import it.proactivity.proactivityairway.model.Fleet;
-import it.proactivity.proactivityairway.repository.FleetRepository;
+//import it.proactivity.proactivityairway.repository.FleetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 //- cancellare un aereo della flotta: il servizio prendere in input una stringa "airplaneModel" che non deve
 // essere vuota e se trova il modello nel db fa la cancellazione altrimenti no e restituisce una
 // ResponseEntity 400 (Bad Request)
-@Service
+/*@Service
 public class FleetService {
 
     @Autowired
@@ -59,4 +59,4 @@ public class FleetService {
     }
 
 
-}
+}*/

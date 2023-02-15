@@ -25,6 +25,9 @@ public class Employee {
     @Column(name = "surname")
     private String surname;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -40,7 +43,8 @@ public class Employee {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", dateOfBirthday=" + dateOfBirth +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
                 ", ral=" + ral +
                 ", task=" + task +
                 '}';

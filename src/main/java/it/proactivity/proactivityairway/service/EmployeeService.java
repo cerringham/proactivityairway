@@ -3,6 +3,7 @@ package it.proactivity.proactivityairway.service;
 import it.proactivity.proactivityairway.model.Employee;
 import it.proactivity.proactivityairway.model.dto.EmployeeDto;
 import it.proactivity.proactivityairway.repository.EmployeeRepository;
+import it.proactivity.proactivityairway.utility.EmployeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,10 @@ public class EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    public ResponseEntity<?> deleteEmployeeById(Long id) {
+    @Autowired
+    EmployeeValidator employeeValidator;
+
+    /*public ResponseEntity deleteEmployeeById(Long id) {
         if (id == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -30,7 +34,7 @@ public class EmployeeService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> deleteEmployeesByList(List<Long> idList) {
+    public ResponseEntity deleteEmployeesByList(List<Long> idList) {
         if (idList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -39,7 +43,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<EmployeeDto> addNewEmployee(EmployeeDto employeeDto) {
-        if (employeeDto == null) {
+        if (!employeeValidator.validateEmployee(employeeDto)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Employee employee = createEmployee(employeeDto);
@@ -51,13 +55,13 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employee.setSurname(employeeDto.getSurname());
+        employee.setEmail(employeeDto.getEmail());
         employee.setDateOfBirth(employeeDto.getDateOfBirth());
         employee.setRal(employeeDto.getRal());
-        employee.setTask(employeeDto.getTask());
         return employee;
-    }
+    }*/
 
-    public ResponseEntity<?> listOfEmployee() {
+    public ResponseEntity listOfEmployee() {
         List<Employee> employeeList = employeeRepository.findAll();
         File file = new File("employeeList.txt");
         if (file.exists()) {
@@ -67,7 +71,7 @@ public class EmployeeService {
             FileWriter fileWriter = new FileWriter(file);
             employeeList.sort(Comparator.comparing(Employee::getRal));
             for (Employee e : employeeList) {
-                fileWriter.write(e.toString() + "\n");
+                fileWriter.write(e.getId() + " " + e.getName() + " " + e.getSurname() + "\n");
             }
             fileWriter.close();
             return ResponseEntity.ok().build();
