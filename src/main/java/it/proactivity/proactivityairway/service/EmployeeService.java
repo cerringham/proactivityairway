@@ -28,7 +28,8 @@ public class EmployeeService {
     @Autowired
     TaskRepository taskRepository;
 
-    EmployeeValidator employeeValidator = new EmployeeValidator();
+    @Autowired
+    EmployeeValidator employeeValidator;
 
     public ResponseEntity insertEmployee(EmployeeDto employeeDto) {
         if (!employeeValidator.validateEmployeeDto(employeeDto)) {

@@ -3,10 +3,11 @@ package it.proactivity.proactivityairway.utility;
 import it.proactivity.proactivityairway.model.dto.EmployeeDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 
-
+@Component
 public class EmployeeValidator {
 
     public Boolean validateEmployeeNameAndSurname(String name, String surname) {

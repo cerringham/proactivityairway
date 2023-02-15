@@ -22,13 +22,15 @@ import java.util.Optional;
 @Service
 public class FlightService {
 
-    FlightValidator flightValidator = new FlightValidator();
+    @Autowired
+    FlightValidator flightValidator;
 
     @Autowired
     FlightRepository flightRepository;
 
     @Autowired
     AirportRepository airportRepository;
+
     public ResponseEntity<List<Flight>> findFlightsFromAndToDate(String from, String to) {
 
         LocalDate parseFrom = ParsingUtility.parseStringToLocalDate(from);

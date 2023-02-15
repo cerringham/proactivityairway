@@ -8,8 +8,6 @@ import it.proactivity.proactivityairway.model.dto.EmployeeDto;
 import it.proactivity.proactivityairway.model.dto.FleetDto;
 import it.proactivity.proactivityairway.repository.EmployeeRepository;
 import it.proactivity.proactivityairway.repository.FleetRepository;
-import it.proactivity.proactivityairway.repository.FlightRepository;
-import it.proactivity.proactivityairway.repository.TaskRepository;
 import it.proactivity.proactivityairway.service.EmployeeService;
 import it.proactivity.proactivityairway.service.FleetService;
 import it.proactivity.proactivityairway.service.FlightService;
@@ -19,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -86,15 +82,15 @@ class ProactivityairwayApplicationTests {
 
     @Test
     void insertFleetPositiveTest() {
-        FleetDto fleetDto = new FleetDto("Boeing 777",3);
+        FleetDto fleetDto = new FleetDto("Boeing 777",5);
 
         Optional<Fleet> fleetBeforeInsert = fleetRepository.findByAirplaneDescription("Boeing 777");
-        assertTrue(fleetBeforeInsert.get().getAvailability() == 2);
+        assertTrue(fleetBeforeInsert.get().getAvailability() == 3);
 
         fleetService.insertFleet(fleetDto);
 
         Optional<Fleet> fleetAfterInsert = fleetRepository.findByAirplaneDescription("Boeing 777");
-        assertTrue(fleetAfterInsert.get().getAvailability() == 3);
+        assertTrue(fleetAfterInsert.get().getAvailability() == 5);
 
     }
 
