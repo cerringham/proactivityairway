@@ -3,6 +3,7 @@ package it.proactivity.proactivityairway;
 import it.proactivity.proactivityairway.model.Employee;
 import it.proactivity.proactivityairway.repository.EmployeeRepository;
 import it.proactivity.proactivityairway.repository.TicketRepository;
+import it.proactivity.proactivityairway.service.FleetService;
 import it.proactivity.proactivityairway.service.TicketService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ class ProactivityairwayApplicationTests {
 
 	@Autowired
 	TicketService ticketService;
+
+	@Autowired
+	FleetService fleetService;
+
 	@Test
 	void contextLoads() {
 	}
@@ -49,5 +54,9 @@ class ProactivityairwayApplicationTests {
 		assertFalse(map.isEmpty());
 	}
 
+	@Test
+	void deleteEmployeeByIdTest() {
+		employeeRepository.deleteById(12l);
+	}
 
 }

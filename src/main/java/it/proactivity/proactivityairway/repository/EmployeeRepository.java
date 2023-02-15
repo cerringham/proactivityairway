@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 //- ricerca dei dipendenti per ruolo
 //- ricerca dei dipendenti che fanno parte del consiglio di amministrazione
+//- cancellazione di un Employee per id
+//- cancellazione di Employee per id (in questo caso una lista)
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e WHERE e.task.name = ?1")
