@@ -130,18 +130,18 @@ VALUES('Tokio-Haneda Airport', 'HND', 'Hanedakuko, Ōta, Tokyo 144-0041', 'Tokio
  INSERT INTO fleet(airplane_description, number_of_seat, availability)
  VALUES('Boeing 777', 320, 2);
 
- INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
- VALUES(2, 1, '17.09', '22.34');
- INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
- VALUES(6, 1, '20.09', '15.04');
+ INSERT INTO flight(route_id, fleet_id, departure_time, arival_time, flight_date)
+ VALUES(2, 1, '17.09', '22.34', '2023-06-20');
+ INSERT INTO flight(route_id, fleet_id, departure_time, arival_time, flight_date)
+ VALUES(6, 1, '20.09', '15.04', '2023-10-12');
 
- INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
- VALUES(4, 2, '20.20', '17.03');
- INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
- VALUES(5, 2, '07.09', '23.09');
+ INSERT INTO flight(route_id, fleet_id, departure_time, arival_time, flight_date)
+ VALUES(4, 2, '20.20', '17.03', '2023-04-21');
+ INSERT INTO flight(route_id, fleet_id, departure_time, arival_time, flight_date)
+ VALUES(5, 2, '07.09', '23.09', '2023-09-11');
 
- INSERT INTO flight(route_id, fleet_id, departure_time, arival_time)
- VALUES(3, 2, '09.38', '17.06');
+ INSERT INTO flight(route_id, fleet_id, departure_time, arival_time, flight_date)
+ VALUES(3, 2, '09.38', '17.06', '2023-01-12');
 
 
 

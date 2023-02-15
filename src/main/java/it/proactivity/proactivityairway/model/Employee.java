@@ -1,7 +1,9 @@
 package it.proactivity.proactivityairway.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
+
 
 import java.time.LocalDate;
 
@@ -36,6 +38,14 @@ public class Employee {
     @ManyToOne
     private Task task;
 
+    public Employee(String name, String surname, String email, LocalDate dateOfBirth, Float ral, Task task) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.ral = ral;
+        this.task = task;
+    }
     @Override
     public String toString() {
         return name + " " + surname + " " + task + " " + ral;

@@ -3,6 +3,7 @@ package it.proactivity.proactivityairway.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -30,13 +31,16 @@ public class Flight {
     @Column(name = "arrival_time")
     private String arrivalTime;
 
+    @Column(name = "flight_date")
+    private LocalDate flightDate;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "flight_id")
     private List<Ticket> ticketList;
 
     @Override
     public String toString() {
-        return route + "\n" + fleet + "\n" + departureTime + "-" + arrivalTime;
+        return route + "\n" + fleet + "\n" + departureTime + "-" + arrivalTime + " " + flightDate;
     }
 }
 
