@@ -14,5 +14,12 @@ public class FleetDto {
 
     private String airplaneDescription;
 
+    private Integer numberOfSeat;
+
     private Integer availability;
+
+    public FleetDto(String airplaneDescription, Integer availability) {
+        this.airplaneDescription = airplaneDescription;
+        this.availability = availability;
+    }
 }

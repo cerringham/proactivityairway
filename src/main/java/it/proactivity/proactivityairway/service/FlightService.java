@@ -2,9 +2,15 @@ package it.proactivity.proactivityairway.service;
 
 
 import it.proactivity.proactivityairway.model.Airport;
+import it.proactivity.proactivityairway.model.Customer;
 import it.proactivity.proactivityairway.model.Flight;
+import it.proactivity.proactivityairway.model.Route;
+import it.proactivity.proactivityairway.model.dto.BuyTicketDto;
+import it.proactivity.proactivityairway.model.dto.FlightDto;
 import it.proactivity.proactivityairway.repository.AirportRepository;
+import it.proactivity.proactivityairway.repository.CustomerRepository;
 import it.proactivity.proactivityairway.repository.FlightRepository;
+import it.proactivity.proactivityairway.repository.RouteRepository;
 import it.proactivity.proactivityairway.utility.FlightValidator;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +37,11 @@ public class FlightService {
     @Autowired
     AirportRepository airportRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
+     RouteRepository routeRepository;
+
     public ResponseEntity<List<Flight>> findFlightsFromAndToDate(String from, String to) {
 
         LocalDate parseFrom = ParsingUtility.parseStringToLocalDate(from);
@@ -49,6 +60,58 @@ public class FlightService {
         writeFlightInformationInFile(file, flightList);
         return ResponseEntity.ok(flightList);
     }
+
+
+
+    public ResponseEntity<List<FlightDto>> getFlightListFromCustomerIdDepartureAndArrival(BuyTicketDto dto) {
+        if (dto == null) {
+            throw new IllegalStateException("Dto can't be null or empty");
+        }
+        flightValidator.validateCustomerId(dto.getCustomerId());
+        flightValidator.validateDeparture(dto.getDeparture());
+        flightValidator.validateArrival(dto.getArrival());
+        Optional<Customer> customer = customerRepository.findById(dto.getCustomerId());
+        if (customer.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Optional<Route> route = findRouteByDepartureAndArrival(dto.getDeparture(), dto.getArrival());
+        if (route.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<Flight> flightList = route.get().getFlightList();
+        List<FlightDto> dtoList = flightList.stream()
+                .map(f -> {
+                    Airport departure = airportRepository.findById(f.getRoute().getDeparture()).get();
+                    Airport arrival = airportRepository.findById(f.getRoute().getArrival()).get();
+                    return new FlightDto(f.getId(), departure.getName(), arrival.getName());
+                }).toList();
+
+        return ResponseEntity.ok(dtoList);
+    }
+
+    private Optional<Route> findRouteByDepartureAndArrival(String departure, String arrival) {
+
+        Optional<Airport> departureAirport = airportRepository.findByName(departure);
+        if (departureAirport.isEmpty()) {
+            throw new IllegalArgumentException("Departure not found");
+        }
+
+        Optional<Airport> arrivalAirport = airportRepository.findByName(arrival);
+        if (arrivalAirport.isEmpty()) {
+            throw new IllegalArgumentException("Arrival not found");
+        }
+
+        Optional<Route> route = routeRepository.findByDepartureAndArrival(departureAirport.get().getId(),
+                arrivalAirport.get().getId());
+
+        return route;
+    }
+
+
+
+
 
     private File createFile(String fileName) {
         File file = new File(fileName);
@@ -93,4 +156,6 @@ public class FlightService {
             throw new IllegalStateException("There is a problem with the file");
         }
     }
+
+
 }

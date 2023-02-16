@@ -31,6 +31,11 @@ public class Fleet {
     @JoinColumn(name = "fleet_id")
     private List<Flight> flightList;
 
+    public Fleet(String airplaneDescription, Integer numberOfSeat, Integer availability) {
+        this.airplaneDescription = airplaneDescription;
+        this.numberOfSeat = numberOfSeat;
+        this.availability = availability;
+    }
     @Override
     public String toString() {
         return airplaneDescription + " " + numberOfSeat;

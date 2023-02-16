@@ -1,5 +1,6 @@
 package it.proactivity.proactivityairway.service;
 
+import it.proactivity.proactivityairway.builder.FleetBuilder;
 import it.proactivity.proactivityairway.model.Fleet;
 import it.proactivity.proactivityairway.model.dto.FleetDto;
 import it.proactivity.proactivityairway.repository.FleetRepository;
@@ -34,8 +35,18 @@ public class FleetService {
         if (fleet.isPresent()) {
             fleet.get().setAvailability(fleetDto.getAvailability());
             fleetRepository.save(fleet.get());
+            return ResponseEntity.ok().build();
+
+        }else {
+
+            if (!fleetValidator.validateAirplaneModel(fleetDto.getAirplaneDescription())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }else {
+                Fleet newFleet = createFleet(fleetDto);
+                fleetRepository.save(newFleet);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
         }
-        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity deleteFleetFromAirplaneModel(String airplaneModel) {
@@ -46,5 +57,19 @@ public class FleetService {
 
         fleetRepository.delete(fleet.get());
         return ResponseEntity.ok().build();
+    }
+
+    private Fleet createFleet(FleetDto fleetDto) {
+        if (fleetDto == null) {
+            throw new IllegalArgumentException("Fleet dro can't be null");
+        }
+        if (fleetDto.getNumberOfSeat() == null) {
+            throw new IllegalArgumentException("Number of seats can't be null");
+        }
+        Fleet fleet = FleetBuilder.newBuilder(fleetDto.getAirplaneDescription())
+                .numberOfSeat(fleetDto.getNumberOfSeat())
+                .availability(fleetDto.getAvailability())
+                .build();
+        return fleet;
     }
 }

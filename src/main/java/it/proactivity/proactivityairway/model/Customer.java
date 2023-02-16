@@ -1,5 +1,6 @@
 package it.proactivity.proactivityairway.model;
 
+import it.proactivity.proactivityairway.builder.CustomerBuilder;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -61,6 +62,26 @@ public class Customer {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private List<Ticket> ticketList;
+
+    public Customer(String name, String surname, String street, String city, String nation, String email,
+                    String phoneNumber, String gender, LocalDate dateOfBirth, Boolean isHandicap, String passport,
+                    String identityCard, String vaccinate) {
+
+        this.name = name;
+        this.surname = surname;
+        this.street = street;
+        this.city = city;
+        this.nation = nation;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.isHandicap = isHandicap;
+        this.passport = passport;
+        this.identityCard = identityCard;
+        this.vaccinate = vaccinate;
+    }
+
 
     @Override
     public String toString() {
