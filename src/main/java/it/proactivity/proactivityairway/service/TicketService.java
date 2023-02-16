@@ -1,5 +1,6 @@
 package it.proactivity.proactivityairway.service;
 
+import it.proactivity.proactivityairway.model.Ticket;
 import it.proactivity.proactivityairway.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,4 +30,6 @@ public class TicketService {
                 n -> (Long) n[1]));
         return map;
     }
+
+    public List<Ticket>
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -26,7 +25,7 @@ public class CustomerDto {
     private Boolean isHandicap;
     private String passport;
     private String identityCard;
-    private String vaccinate;
+    private String vaccinations;
     private List<Ticket> ticketList;
 
     public CustomerDto(String name, String surname, String street, String city, String nation, String email,
@@ -44,7 +43,25 @@ public class CustomerDto {
         this.isHandicap = isHandicap;
         this.passport = passport;
         this.identityCard = identityCard;
-        this.vaccinate = vaccinate;
+        this.vaccinations = vaccinate;
         this.ticketList = ticketList;
+    }
+
+    public CustomerDto(String name, String surname, String street, String city, String nation, String email,
+                       String phoneNumber, String gender, String dateOfBirthday, Boolean isHandicap, String passport,
+                       String identityCard, String vaccinate) {
+        this.name = name;
+        this.surname = surname;
+        this.street = street;
+        this.city = city;
+        this.nation = nation;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.dateOfBirthday = dateOfBirthday;
+        this.isHandicap = isHandicap;
+        this.passport = passport;
+        this.identityCard = identityCard;
+        this.vaccinations = vaccinate;
     }
 }

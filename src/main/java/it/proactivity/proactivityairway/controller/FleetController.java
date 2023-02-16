@@ -11,7 +11,7 @@ public class FleetController {
     FleetService fleetService;
 
     @PostMapping(value = "/insert-fleet")
-    public ResponseEntity<?> insertNewFleet(@RequestBody String airplaneModel, Integer newAvailability) {
+    public ResponseEntity<?> insertNewFleet(@RequestParam String airplaneModel, @RequestParam Integer newAvailability) {
         return fleetService.insertNewFleet(airplaneModel, newAvailability);
     }
 

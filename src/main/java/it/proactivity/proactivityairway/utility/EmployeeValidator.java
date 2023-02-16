@@ -33,8 +33,6 @@ public class EmployeeValidator {
          return StringUtils.isAlphaSpace(nameOrSurname);
     }
 
-
-
     public static Boolean validateRal(Float ral) {
         if (ral == null) {
             return false;
@@ -42,11 +40,13 @@ public class EmployeeValidator {
         if (ral <= 15000.00) {
             return false;
         }
-        DecimalFormat decimalFormat = new DecimalFormat();
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String ralString = decimalFormat.format(ral);
-        double d = Double.parseDouble(ralString);
-        double rounded = Math.round(d * 100.0) / 100.0;
-        return rounded == d;
+        Float rounded = Float.parseFloat(ralString.replace(',', '.'));
+        if (ral.equals(rounded) || ralString.split(",")[1].length() > 2) {
+            return false;
+        }
+        return true;
     }
 
     public static Boolean validateEmployee(EmployeeDto employeeDto) {

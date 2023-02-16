@@ -10,10 +10,6 @@ import java.util.List;
 @Repository
 public interface FleetRepository extends JpaRepository<Fleet, Long> {
 
-    @Query(value = "SELECT DISTINCT airplane_description FROM fleet", nativeQuery = true)
-    List<String> getFleetNames();
-
-
     Fleet findByAirplaneDescription(String airplaneDescription);
 
 }

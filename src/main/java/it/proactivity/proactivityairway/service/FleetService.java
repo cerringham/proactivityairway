@@ -4,6 +4,7 @@ import it.proactivity.proactivityairway.model.Fleet;
 import it.proactivity.proactivityairway.model.dto.FleetDto;
 import it.proactivity.proactivityairway.repository.FleetRepository;
 import it.proactivity.proactivityairway.utility.FleetUtility;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,41 +30,34 @@ public class FleetService {
     FleetUtility fleetUtility;
 
     public ResponseEntity<?> insertNewFleet(String airplaneModel, Integer newAvailability) {
-        if (airplaneModel.isEmpty()) {
+        if (StringUtils.isEmpty(airplaneModel)) {
             return ResponseEntity.badRequest().build();
         }
         if (newAvailability <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        List<String> modelList = fleetRepository.getFleetNames();
-        if (modelList.contains(airplaneModel)) {
-            Fleet fleet = fleetRepository.findByAirplaneDescription(airplaneModel);
-            fleet.setAvailability(fleet.getAvailability() + newAvailability);
-            fleetRepository.save(fleet);
-            return ResponseEntity.ok().build();
-        }
-        if (!modelList.contains(airplaneModel)) {
+        Fleet fleet = fleetRepository.findByAirplaneDescription(airplaneModel);
+        if (fleet == null) {
             if (fleetUtility.validateFleetName(airplaneModel)) {
                 FleetDto fleetDto = new FleetDto(airplaneModel, newAvailability);
-                Fleet fleet = createNewFleet(fleetDto);
-                fleetRepository.save(fleet);
+                Fleet newFleet = createNewFleet(fleetDto);
+                fleetRepository.save(newFleet);
                 return ResponseEntity.ok().build();
             }
         }
+        fleet.setAvailability(fleet.getAvailability() + newAvailability);
+        fleetRepository.save(fleet);
         return ResponseEntity.ok().build();
     }
-
-
-    public ResponseEntity<?> deleteAFleet(String airplaneModel) {
+    public ResponseEntity deleteAFleet(String airplaneModel) {
         if (airplaneModel.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        List<String> modelList = fleetRepository.getFleetNames();
-        if (modelList.contains(airplaneModel)) {
-           Fleet fleet = fleetRepository.findByAirplaneDescription(airplaneModel);
-           fleet.setAvailability(fleet.getAvailability() - 1);
-           fleetRepository.save(fleet);
-           return ResponseEntity.ok().build();
+        Fleet fleet= fleetRepository.findByAirplaneDescription(airplaneModel);
+        if (fleet != null) {
+            fleet.setAvailability(fleet.getAvailability() - 1);
+            fleetRepository.save(fleet);
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
     }

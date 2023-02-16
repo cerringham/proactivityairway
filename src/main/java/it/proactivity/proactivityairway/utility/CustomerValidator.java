@@ -3,7 +3,9 @@ package it.proactivity.proactivityairway.utility;
 import it.proactivity.proactivityairway.model.dto.CustomerDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomerValidator {
     public static Boolean validateEmail(String email) {
         if (StringUtils.isEmpty(email))
@@ -36,18 +38,11 @@ public class CustomerValidator {
         if (customerDto == null) {
             return false;
         }
-        if (validNameAndSurname(customerDto.getName())) {
+        if (validNameAndSurname(customerDto.getName()) &&
+                validateEmail(customerDto.getEmail()) &&
+                validPhoneNumber(customerDto.getPhoneNumber())) {
             return true;
         }
-        if (validNameAndSurname(customerDto.getSurname())) {
-            return true;
-        }
-        if (validateEmail(customerDto.getEmail())) {
-            return true;
-        }
-        if (validPhoneNumber(customerDto.getPhoneNumber())) {
-            return true;
-        }
-        return true;
+        return false;
     }
 }

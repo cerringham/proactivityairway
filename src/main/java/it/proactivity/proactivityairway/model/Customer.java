@@ -43,7 +43,7 @@ public class Customer {
     private String gender;
 
     @Column(name = "date_of_birthday")
-    private String dateOfBirthday;
+    private LocalDate dateOfBirthday;
 
     @Column(name = "handicap")
     private Boolean isHandicap;
@@ -55,7 +55,7 @@ public class Customer {
     private String identityCard;
 
     @Column(name = "vaccinations")
-    private String vaccinate;
+    private String vaccinations;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
