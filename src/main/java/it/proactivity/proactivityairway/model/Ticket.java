@@ -3,7 +3,6 @@ package it.proactivity.proactivityairway.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Entity
 @Table(name = "ticket")
@@ -27,6 +26,11 @@ public class Ticket {
     @Column(name = "seat_code")
     private String seatCode;
 
+    public Ticket(Flight flight, Customer customer, String seatCode) {
+        this.flight = flight;
+        this.customer = customer;
+        this.seatCode = seatCode;
+    }
 
 
     @Override

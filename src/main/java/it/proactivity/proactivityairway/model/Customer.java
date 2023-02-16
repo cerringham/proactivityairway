@@ -59,6 +59,10 @@ public class Customer {
     @Column(name = "vaccinations")
     private String vaccinate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "loyalty_program_id", referencedColumnName = "id")
+    private LoyaltyProgram loyaltyProgram;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private List<Ticket> ticketList;

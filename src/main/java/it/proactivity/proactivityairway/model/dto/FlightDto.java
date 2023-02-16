@@ -9,11 +9,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlightDto {
-
-    private Long flightId;
+public class FlightDto extends FlightIdDto {
 
     private String departure;
 
     private String arrival;
+
+    public FlightDto(Long id, String departure, String arrival) {
+        super(id);
+        this.departure = departure;
+        this.arrival = arrival;
+    }
 }

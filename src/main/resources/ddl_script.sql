@@ -84,3 +84,15 @@ FOREIGN KEY (flight_id) REFERENCES flight(id),
 FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
+CREATE TABLE IF NOT EXISTS loyalty_program(
+id serial primary key,
+customer_id INT,
+points INT,
+FOREIGN KEY(customer_id) REFERENCES customer(id));
+
+ALTER TABLE customer
+ADD COLUMN loyalty_program_id INT;
+
+
+ALTER TABLE customer
+ADD CONSTRAINT fk_customer_loyalty_program FOREIGN KEY (loyalty_program_id) REFERENCES loyalty_program(id);

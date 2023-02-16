@@ -5,9 +5,6 @@ import it.proactivity.proactivityairway.model.*;
 import it.proactivity.proactivityairway.model.dto.*;
 import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.service.*;
-import it.proactivity.proactivityairway.utility.CustomerValidator;
-import it.proactivity.proactivityairway.utility.FleetValidator;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,9 +43,13 @@ class ProactivityairwayApplicationTests {
     @Autowired
     CustomerService customerService;
     @Autowired
-    private AirportRepository airportRepository;
+     AirportRepository airportRepository;
     @Autowired
-    private RouteRepository routeRepository;
+     RouteRepository routeRepository;
+
+    @Autowired
+    TicketRepository ticketRepository;
+
 
     @Test
     void contextLoads() {
@@ -475,9 +476,9 @@ class ProactivityairwayApplicationTests {
 
     @Test
     void insertNewCustomerPositiveTest() {
-        CustomerDto customerDto = new CustomerDto("Alessio", "Cassarino", "via pozzillo 19", "gela", "ita",
-                "alessio@alessio.it", "+398763546278", "male", "1995-11-16",
-                false, "hsgdj76", "hsjdnnd87", "covid 19, malaria");
+        CustomerDto customerDto = new CustomerDto("Giada", "Palumbo", "via busto 19", "busto", "ita",
+                "giada@giada.it", "+4636748949", "female", "1997-11-10",
+                false, "83747392jdjhd", "763737hdnd", "covid 19, malaria");
 
         Long customerBeforeInsert = customerRepository.findAll().stream().count();
 
@@ -500,20 +501,23 @@ class ProactivityairwayApplicationTests {
 
     @Test
     void getFlightDtoListFromCustomerIdDepartureAndArrivalAirportTest() {
-        BuyTicketDto dto = new BuyTicketDto(1l, "Milano Malpensa", "JFK");
-        ResponseEntity<List<FlightDto>> response = flightService.getFlightListFromCustomerIdDepartureAndArrival(dto);
+        BuyTicketDto dto = new BuyTicketDto(1l, "JFK", "Los Angeles International Airport");
+        ResponseEntity<List<FlightDto>> response = flightService.buyFlightStep1(dto);
         List<FlightDto> list = response.getBody();
-
+        list.stream().forEach(System.out::println);
        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
-    void test() {
-        Optional<Airport> departureAirport = airportRepository.findByName("Milano Malpensa");
-        Optional<Airport> arrivalAirport = airportRepository.findByName("JFK");
-        Optional<Route> route = routeRepository.findByDepartureAndArrival(1,2);
-        System.out.println(route.get());
+    void buyFlightStep2PositiveTest() {
+       Long numberOfTicketBeforeInsert = ticketRepository.findAll().stream().count();
+
+       FlightIdDto flightIdDto = new FlightIdDto(3l);
+
+       flightService.buyFlightStep2(flightIdDto,4l, "44a");
+
+        Long numberOfTicketAfterInsert = ticketRepository.findAll().stream().count();
+
+        assertTrue(numberOfTicketBeforeInsert < numberOfTicketAfterInsert);
     }
-
-
 }

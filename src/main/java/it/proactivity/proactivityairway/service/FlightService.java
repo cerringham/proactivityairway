@@ -1,16 +1,12 @@
 package it.proactivity.proactivityairway.service;
 
 
-import it.proactivity.proactivityairway.model.Airport;
-import it.proactivity.proactivityairway.model.Customer;
-import it.proactivity.proactivityairway.model.Flight;
-import it.proactivity.proactivityairway.model.Route;
+import it.proactivity.proactivityairway.builder.TicketBuilder;
+import it.proactivity.proactivityairway.model.*;
 import it.proactivity.proactivityairway.model.dto.BuyTicketDto;
 import it.proactivity.proactivityairway.model.dto.FlightDto;
-import it.proactivity.proactivityairway.repository.AirportRepository;
-import it.proactivity.proactivityairway.repository.CustomerRepository;
-import it.proactivity.proactivityairway.repository.FlightRepository;
-import it.proactivity.proactivityairway.repository.RouteRepository;
+import it.proactivity.proactivityairway.model.dto.FlightIdDto;
+import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.utility.FlightValidator;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +26,18 @@ public class FlightService {
 
     @Autowired
     FlightValidator flightValidator;
-
     @Autowired
     FlightRepository flightRepository;
-
     @Autowired
     AirportRepository airportRepository;
-
     @Autowired
     CustomerRepository customerRepository;
     @Autowired
-     RouteRepository routeRepository;
+    RouteRepository routeRepository;
+    @Autowired
+    FleetRepository fleetRepository;
+    @Autowired
+    TicketRepository ticketRepository;
 
     public ResponseEntity<List<Flight>> findFlightsFromAndToDate(String from, String to) {
 
@@ -61,9 +58,7 @@ public class FlightService {
         return ResponseEntity.ok(flightList);
     }
 
-
-
-    public ResponseEntity<List<FlightDto>> getFlightListFromCustomerIdDepartureAndArrival(BuyTicketDto dto) {
+    public ResponseEntity<List<FlightDto>> buyFlightStep1(BuyTicketDto dto) {
         if (dto == null) {
             throw new IllegalStateException("Dto can't be null or empty");
         }
@@ -91,6 +86,43 @@ public class FlightService {
         return ResponseEntity.ok(dtoList);
     }
 
+    public ResponseEntity buyFlightStep2(FlightIdDto flightIdDto, Long customerId, String seat) {
+        flightValidator.validateFlightId(flightIdDto.getId());
+        flightValidator.validateCustomerId(customerId);
+        flightValidator.validateSeat(seat);
+
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (customer.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Optional<Flight> flight = flightRepository.findById(flightIdDto.getId());
+        if (flight.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Ticket ticket = createTicket(flight.get(), customer.get(), seat);
+        ticketRepository.save(ticket);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private Ticket createTicket(Flight flight, Customer customer, String s) {
+        if (customer.getLoyaltyProgram().getPoint() < 1500) {
+            customer.getLoyaltyProgram().setPoint(customer.getLoyaltyProgram().getPoint() + 100);
+            customerRepository.save(customer);
+        }
+        if (customer.getLoyaltyProgram().getPoint() == 1500) {
+            customer.getLoyaltyProgram().setPoint(0);
+            customerRepository.save(customer);
+        }
+        Ticket ticket = TicketBuilder.newBuilder(flight)
+                .customer(customer)
+                .seatCode(s)
+                .build();
+
+        return ticket;
+    }
+
     private Optional<Route> findRouteByDepartureAndArrival(String departure, String arrival) {
 
         Optional<Airport> departureAirport = airportRepository.findByName(departure);
@@ -108,10 +140,6 @@ public class FlightService {
 
         return route;
     }
-
-
-
-
 
     private File createFile(String fileName) {
         File file = new File(fileName);
@@ -156,6 +184,4 @@ public class FlightService {
             throw new IllegalStateException("There is a problem with the file");
         }
     }
-
-
 }
