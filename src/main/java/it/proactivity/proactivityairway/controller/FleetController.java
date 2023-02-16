@@ -3,22 +3,20 @@ package it.proactivity.proactivityairway.controller;
 import it.proactivity.proactivityairway.service.FleetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-/*@RestController
+@RestController
 public class FleetController {
     @Autowired
     FleetService fleetService;
 
-    @PostMapping(value = "insert")
-    public ResponseEntity<?> insertNewFleet(@RequestParam String airplaneModel, @RequestParam Integer newAvailability) {
+    @PostMapping(value = "/insert-fleet")
+    public ResponseEntity<?> insertNewFleet(@RequestBody String airplaneModel, Integer newAvailability) {
         return fleetService.insertNewFleet(airplaneModel, newAvailability);
     }
 
-    @PostMapping(value = "delete")
+    @PostMapping(value = "/delete-fleet")
     public ResponseEntity<?> deleteAFlee(@RequestParam String airplaneModel) {
         return fleetService.deleteAFleet(airplaneModel);
     }
-}*/
+}

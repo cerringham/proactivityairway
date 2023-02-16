@@ -33,18 +33,7 @@ public class EmployeeValidator {
          return StringUtils.isAlphaSpace(nameOrSurname);
     }
 
-    public static Boolean validPhoneNumber(String phoneNumber) {
-        if (StringUtils.isEmpty(phoneNumber)) {
-            return false;
-        }
-        if (phoneNumber.startsWith("+")) {
-            return true;
-        }
-        if (StringUtils.isNumeric(phoneNumber)) {
-            return true;
-        }
-        return false;
-    }
+
 
     public static Boolean validateRal(Float ral) {
         if (ral == null) {

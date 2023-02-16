@@ -26,7 +26,7 @@ public class EmployeeService {
     @Autowired
     EmployeeValidator employeeValidator;
 
-    /*public ResponseEntity deleteEmployeeById(Long id) {
+    public ResponseEntity deleteEmployeeById(Long id) {
         if (id == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -59,7 +59,7 @@ public class EmployeeService {
         employee.setDateOfBirth(employeeDto.getDateOfBirth());
         employee.setRal(employeeDto.getRal());
         return employee;
-    }*/
+    }
 
     public ResponseEntity listOfEmployee() {
         List<Employee> employeeList = employeeRepository.findAll();
@@ -71,7 +71,8 @@ public class EmployeeService {
             FileWriter fileWriter = new FileWriter(file);
             employeeList.sort(Comparator.comparing(Employee::getRal));
             for (Employee e : employeeList) {
-                fileWriter.write(e.getId() + " " + e.getName() + " " + e.getSurname() + "\n");
+                fileWriter.write(e.getId() + " " + e.getName() + " " + e.getSurname() + " " + e.getEmail() + " " +
+                        e.getDateOfBirth() + " " + e.getRal() + " " + e.getTask() + "\n");
             }
             fileWriter.close();
             return ResponseEntity.ok().build();

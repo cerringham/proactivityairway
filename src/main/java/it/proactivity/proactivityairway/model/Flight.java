@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -33,6 +34,9 @@ public class Flight {
     @Column(name = "arrival_time")
     private String arrivalTime;
 
+    @Column(name = "flight_date")
+    private LocalDate flightDate;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "flight_id")
     private List<Ticket> ticketList;
@@ -45,6 +49,7 @@ public class Flight {
                 ", fleet=" + fleet +
                 ", departureTime='" + departureTime + '\'' +
                 ", arrivalTime='" + arrivalTime + '\'' +
+                ", flightDate=" + flightDate +
                 ", ticketList=" + ticketList +
                 '}';
     }

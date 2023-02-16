@@ -43,7 +43,7 @@ public class Customer {
     private String gender;
 
     @Column(name = "date_of_birthday")
-    private LocalDate dateOfBirth;
+    private String dateOfBirthday;
 
     @Column(name = "handicap")
     private Boolean isHandicap;
@@ -61,24 +61,5 @@ public class Customer {
     @JoinColumn(name = "customer_id")
     private List<Ticket> ticketList;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", nation='" + nation + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", gender='" + gender + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", isHandicap=" + isHandicap +
-                ", passport='" + passport + '\'' +
-                ", identityCard='" + identityCard + '\'' +
-                ", vaccinate='" + vaccinate + '\'' +
-                ", ticketList=" + ticketList +
-                '}';
-    }
+
 }

@@ -15,7 +15,7 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-    /*@DeleteMapping(value = "/delete-by-id")
+    @DeleteMapping(value = "/delete-by-id")
     public ResponseEntity deleteEmployeeById(@RequestParam Long id) {
         return employeeService.deleteEmployeeById(id);
     }
@@ -25,10 +25,10 @@ public class EmployeeController {
         return employeeService.deleteEmployeesByList(idList);
     }
 
-    @PostMapping(value = "/insert")
+    @PostMapping(value = "/insert-employee")
     public ResponseEntity insertEmployee(@RequestBody EmployeeDto employeeDto) {
         return employeeService.addNewEmployee(employeeDto);
-    }*/
+    }
 
     @GetMapping(value = "/employee-list")
     public ResponseEntity createEmployeeList() {

@@ -1,7 +1,9 @@
 package it.proactivity.proactivityairway.service;
 
 import it.proactivity.proactivityairway.model.Fleet;
-//import it.proactivity.proactivityairway.repository.FleetRepository;
+import it.proactivity.proactivityairway.model.dto.FleetDto;
+import it.proactivity.proactivityairway.repository.FleetRepository;
+import it.proactivity.proactivityairway.utility.FleetUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,28 +19,36 @@ import java.util.List;
 //- cancellare un aereo della flotta: il servizio prendere in input una stringa "airplaneModel" che non deve
 // essere vuota e se trova il modello nel db fa la cancellazione altrimenti no e restituisce una
 // ResponseEntity 400 (Bad Request)
-/*@Service
+@Service
 public class FleetService {
 
     @Autowired
     FleetRepository fleetRepository;
 
+    @Autowired
+    FleetUtility fleetUtility;
+
     public ResponseEntity<?> insertNewFleet(String airplaneModel, Integer newAvailability) {
-        if (airplaneModel == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         if (airplaneModel.isEmpty()) {
-            throw new IllegalArgumentException();
+            return ResponseEntity.badRequest().build();
         }
         if (newAvailability <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().build();
         }
         List<String> modelList = fleetRepository.getFleetNames();
         if (modelList.contains(airplaneModel)) {
-            Fleet fleet = fleetRepository.getFleetWhitAvailability(airplaneModel);
+            Fleet fleet = fleetRepository.findByAirplaneDescription(airplaneModel);
             fleet.setAvailability(fleet.getAvailability() + newAvailability);
             fleetRepository.save(fleet);
             return ResponseEntity.ok().build();
+        }
+        if (!modelList.contains(airplaneModel)) {
+            if (fleetUtility.validateFleetName(airplaneModel)) {
+                FleetDto fleetDto = new FleetDto(airplaneModel, newAvailability);
+                Fleet fleet = createNewFleet(fleetDto);
+                fleetRepository.save(fleet);
+                return ResponseEntity.ok().build();
+            }
         }
         return ResponseEntity.ok().build();
     }
@@ -50,7 +60,7 @@ public class FleetService {
         }
         List<String> modelList = fleetRepository.getFleetNames();
         if (modelList.contains(airplaneModel)) {
-           Fleet fleet = fleetRepository.getFleetWhitAvailability(airplaneModel);
+           Fleet fleet = fleetRepository.findByAirplaneDescription(airplaneModel);
            fleet.setAvailability(fleet.getAvailability() - 1);
            fleetRepository.save(fleet);
            return ResponseEntity.ok().build();
@@ -58,5 +68,14 @@ public class FleetService {
         return ResponseEntity.badRequest().build();
     }
 
+    public Fleet createNewFleet(FleetDto fleetDto) {
+        Fleet fleet = new Fleet();
+        fleet.setAirplaneDescription(fleetDto.getAirplaneModel());
+        fleet.setNumberOfSeat(fleetDto.getNumberOfSeat());
+        fleet.setAvailability(fleetDto.getAvailability());
+        fleet.setFlightList(fleetDto.getFlightList());
+        return fleet;
+    }
 
-}*/
+
+}
