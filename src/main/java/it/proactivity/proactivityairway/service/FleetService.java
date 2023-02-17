@@ -6,20 +6,10 @@ import it.proactivity.proactivityairway.repository.FleetRepository;
 import it.proactivity.proactivityairway.utility.FleetUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
-// inserire un nuovo aereo nella flotta: il servizio prende in input una stringa "airplaneModel" e un numero "newAvailability",
-// se il nome dell'aereo è già presente nel database allora viene aggiornata la colonna availability con il valore newAvailability,
-// altrimenti restituisco una ResponseEntity 404 (Not Found). Se newAvailability è minore o uguale a 0 restituisco una ResponseEntity 400
-// (Bad Request); la stringa "airplaneModel" non deve essere vuota (eccezione).
-
-//- cancellare un aereo della flotta: il servizio prendere in input una stringa "airplaneModel" che non deve
-// essere vuota e se trova il modello nel db fa la cancellazione altrimenti no e restituisce una
-// ResponseEntity 400 (Bad Request)
 @Service
 public class FleetService {
 

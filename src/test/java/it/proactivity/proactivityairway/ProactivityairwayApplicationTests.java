@@ -2,6 +2,7 @@ package it.proactivity.proactivityairway;
 
 import it.proactivity.proactivityairway.model.Customer;
 import it.proactivity.proactivityairway.model.Employee;
+import it.proactivity.proactivityairway.model.Ticket;
 import it.proactivity.proactivityairway.model.dto.CustomerDto;
 import it.proactivity.proactivityairway.repository.CustomerRepository;
 import it.proactivity.proactivityairway.repository.EmployeeRepository;
@@ -78,4 +79,9 @@ class ProactivityairwayApplicationTests {
 		assertTrue(customerList.size() == 6);
 	}
 
+	@Test
+	void getAllTicketsFromCustomerPositiveTest() {
+		ResponseEntity<List<Ticket>> ticketList = customerService.getAllTicketsFromCustomer(3l);
+		
+	}
 }
