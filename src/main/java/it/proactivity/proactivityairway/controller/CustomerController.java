@@ -1,7 +1,8 @@
 package it.proactivity.proactivityairway.controller;
 
-import it.proactivity.proactivityairway.model.Ticket;
+
 import it.proactivity.proactivityairway.model.dto.CustomerDto;
+import it.proactivity.proactivityairway.model.dto.TicketDto;
 import it.proactivity.proactivityairway.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class CustomerController {
         return customerService.insertNewCustomer(customerDto);
     }
 
-    @GetMapping(value = "/get-ticket-list-from-customer")
-    public ResponseEntity<List<Ticket>>  getAllTicketsFromCustomer(@RequestParam Long customerId) {
-        return customerService.getAllTicketsFromCustomer(customerId);
+    @GetMapping(value = "/get-past-reservations")
+    public ResponseEntity<List<TicketDto>>  getPastReservationsFromCustomer(@RequestParam String customerId) {
+        return customerService.getPastReservationsFromCustomer(customerId);
     }
 }

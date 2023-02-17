@@ -3,7 +3,9 @@ package it.proactivity.proactivityairway.service;
 import it.proactivity.proactivityairway.model.Customer;
 import it.proactivity.proactivityairway.model.Ticket;
 import it.proactivity.proactivityairway.model.dto.CustomerDto;
+import it.proactivity.proactivityairway.model.dto.TicketDto;
 import it.proactivity.proactivityairway.repository.CustomerRepository;
+import it.proactivity.proactivityairway.repository.TicketRepository;
 import it.proactivity.proactivityairway.utility.CustomerValidator;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 //inserimento di un Customer, controllando che il numero di telefono contenga solo cifre e il carattere + per il
 // prefisso internazionale (non convertite il "+" in 00) n.b. dovete creare voi un metodo
@@ -29,6 +32,9 @@ public class CustomerService {
 
     @Autowired
     CustomerValidator customerValidator;
+
+    @Autowired
+    TicketRepository ticketRepository;
 
     public ResponseEntity insertNewCustomer(CustomerDto customerDto) {
         if (customerDto == null) {
@@ -60,11 +66,11 @@ public class CustomerService {
         return customer;
     }
 
-    public ResponseEntity<List<Ticket>> getAllTicketsFromCustomer(Long customerId) {
-        if (customerId == null) {
+    public ResponseEntity<List<TicketDto>> getPastReservationsFromCustomer(String customerId) {
+        if (!customerValidator.validateId(customerId)) {
             return ResponseEntity.notFound().build();
         }
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Customer> customer = customerRepository.findById(Long.parseLong(customerId));
         if (customer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -72,12 +78,15 @@ public class CustomerService {
         if (customerTicketList.size() == 0) {
             return ResponseEntity.notFound().build();
         }
-        for (Ticket t : customerTicketList) {
-            if (t.getFlight().getFlightDate().isBefore(LocalDate.now())) {
-                t.getFlight();
-            }
-            return null;
-        }
-        return ResponseEntity.ok(customerTicketList);
+        List<TicketDto> ticketDtos = customerTicketList
+                .stream()
+                .filter(t -> ticketIsBefore(t.getFlight().getFlightDate()))
+                .map(t -> new TicketDto(t.getCustomer().getId().toString(), t.getFlight().getId().toString(),
+                        t.getSeatCode()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ticketDtos);
+    }
+    public Boolean ticketIsBefore(LocalDate date) {
+        return date.isBefore(LocalDate.now());
     }
 }

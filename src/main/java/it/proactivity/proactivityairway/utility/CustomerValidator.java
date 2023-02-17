@@ -1,5 +1,6 @@
 package it.proactivity.proactivityairway.utility;
 
+import com.sun.jdi.LongValue;
 import it.proactivity.proactivityairway.model.dto.CustomerDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -32,6 +33,18 @@ public class CustomerValidator {
             return true;
         }
         return false;
+    }
+
+    public static Boolean validateId(String id) {
+        if (StringUtils.isEmpty(id)) {
+            return false;
+        }
+        try {
+            Long.parseLong(id);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public static Boolean validateCustomer(CustomerDto customerDto) {
