@@ -96,3 +96,15 @@ ADD COLUMN loyalty_program_id INT;
 
 ALTER TABLE customer
 ADD CONSTRAINT fk_customer_loyalty_program FOREIGN KEY (loyalty_program_id) REFERENCES loyalty_program(id);
+
+ALTER TABLE flight
+RENAME COLUMN flight_date TO departure_date;
+
+ALTER TABLE flight
+ADD COLUMN arrival_date DATE;
+
+ALTER TABLE flight
+ALTER COLUMN arrival_time TYPE time USING arrival_time::time without time zone;
+
+ALTER TABLE flight
+ALTER COLUMN departure_time TYPE time USING departure_time::time without time zone;

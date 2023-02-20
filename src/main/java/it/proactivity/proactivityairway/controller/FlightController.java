@@ -24,17 +24,6 @@ public class FlightController {
     }
 
 
-    @GetMapping("/buy-flight-step1")
-    public ResponseEntity<List<FlightDto>> buyFlightStep1(@RequestBody BuyTicketDto dto) {
-        return flightService.buyFlightStep1(dto);
-    }
-
-    @GetMapping("/buy-flight-step2/{customerId}")
-    public ResponseEntity buyFlightStep2(@RequestBody FlightIdDto flightIdDto, @PathVariable Long customerId,
-                                         @RequestParam String seat) {
-        return flightService.buyFlightStep2(flightIdDto, customerId, seat);
-    }
-
     /*
     @PostMapping("insert-flight")
     public ResponseEntity insertFlight(@RequestBody FlightWithDateDto dto) {

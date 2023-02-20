@@ -2,11 +2,7 @@ package it.proactivity.proactivityairway.service;
 
 
 import it.proactivity.proactivityairway.builder.FlightBuilder;
-import it.proactivity.proactivityairway.builder.TicketBuilder;
 import it.proactivity.proactivityairway.model.*;
-import it.proactivity.proactivityairway.model.dto.BuyTicketDto;
-import it.proactivity.proactivityairway.model.dto.FlightDto;
-import it.proactivity.proactivityairway.model.dto.FlightIdDto;
 import it.proactivity.proactivityairway.model.dto.FlightWithDateDto;
 import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.utility.FlightValidator;
@@ -39,8 +35,7 @@ public class FlightService {
     RouteRepository routeRepository;
     @Autowired
     FleetRepository fleetRepository;
-    @Autowired
-    TicketRepository ticketRepository;
+
 
     public ResponseEntity<List<Flight>> findFlightsFromAndToDate(String from, String to) {
 
@@ -60,56 +55,6 @@ public class FlightService {
         writeFlightInformationInFile(file, flightList);
         return ResponseEntity.ok(flightList);
     }
-
-    public ResponseEntity<List<FlightDto>> buyFlightStep1(BuyTicketDto dto) {
-        if (dto == null) {
-            throw new IllegalStateException("Dto can't be null or empty");
-        }
-        flightValidator.validateCustomerId(dto.getCustomerId());
-        flightValidator.validateDeparture(dto.getDeparture());
-        flightValidator.validateArrival(dto.getArrival());
-        Optional<Customer> customer = customerRepository.findById(dto.getCustomerId());
-        if (customer.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Optional<Route> route = findRouteByDepartureAndArrival(dto.getDeparture(), dto.getArrival());
-        if (route.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        List<Flight> flightList = route.get().getFlightList();
-        List<FlightDto> dtoList = flightList.stream()
-                .map(f -> {
-                    Airport departure = airportRepository.findById(f.getRoute().getDeparture()).get();
-                    Airport arrival = airportRepository.findById(f.getRoute().getArrival()).get();
-                    return new FlightDto(f.getId(), departure.getName(), arrival.getName());
-                }).toList();
-
-        return ResponseEntity.ok(dtoList);
-    }
-
-    public ResponseEntity buyFlightStep2(FlightIdDto flightIdDto, Long customerId, String seat) {
-        flightValidator.validateFlightId(flightIdDto.getId());
-        flightValidator.validateCustomerId(customerId);
-        flightValidator.validateSeat(seat);
-
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (customer.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Optional<Flight> flight = flightRepository.findById(flightIdDto.getId());
-        if (flight.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Ticket ticket = createTicket(flight.get(), customer.get(), seat);
-        ticketRepository.save(ticket);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-
 
     public ResponseEntity insertFlight(FlightWithDateDto dto) {
         if (dto == null) {
@@ -133,16 +78,9 @@ public class FlightService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
-
-
-
     private Flight createFlight(Route route, Fleet fleet, LocalDate date, String departureTime, String arrivalTime) {
         String cestsTimeZone = "Europe/Rome";   // CEST
         LocalDate cestLocalDate = date.atStartOfDay(ZoneId.of(cestsTimeZone)).toLocalDate();
-
-
-
 
         Optional<Airport> departureAirport = airportRepository.findById(route.getDeparture());
         if (departureAirport.isEmpty()) {
@@ -176,31 +114,6 @@ public class FlightService {
                 .build();
 
         return flight;
-    }
-
-
-
-
-
-
-
-
-
-    private Ticket createTicket(Flight flight, Customer customer, String s) {
-        if (customer.getLoyaltyProgram().getPoint() < 1500) {
-            customer.getLoyaltyProgram().setPoint(customer.getLoyaltyProgram().getPoint() + 100);
-            customerRepository.save(customer);
-        }
-        if (customer.getLoyaltyProgram().getPoint() == 1500) {
-            customer.getLoyaltyProgram().setPoint(0);
-            customerRepository.save(customer);
-        }
-        Ticket ticket = TicketBuilder.newBuilder(flight)
-                .customer(customer)
-                .seatCode(s)
-                .build();
-
-        return ticket;
     }
 
     private Optional<Route> findRouteByDepartureAndArrival(String departure, String arrival) {

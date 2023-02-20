@@ -506,7 +506,7 @@ class ProactivityairwayApplicationTests {
     @Test
     void getFlightDtoListFromCustomerIdDepartureAndArrivalAirportTest() {
         BuyTicketDto dto = new BuyTicketDto(1l, "JFK", "Los Angeles International Airport");
-        ResponseEntity<List<FlightDto>> response = flightService.buyFlightStep1(dto);
+        ResponseEntity<List<FlightDto>> response = ticketService.buyFlightStep1(dto);
         List<FlightDto> list = response.getBody();
         list.stream().forEach(System.out::println);
        assertTrue(response.getStatusCode().is2xxSuccessful());
@@ -518,7 +518,7 @@ class ProactivityairwayApplicationTests {
 
        FlightIdDto flightIdDto = new FlightIdDto(3l);
 
-       flightService.buyFlightStep2(flightIdDto,4l, "44a");
+       ticketService.buyFlightStep2(flightIdDto,4l, "44a");
 
         Long numberOfTicketAfterInsert = ticketRepository.findAll().stream().count();
 
