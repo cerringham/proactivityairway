@@ -11,13 +11,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FlightDto extends FlightIdDto {
 
-    private String departure;
+    private String departureAirport;
 
-    private String arrival;
+    private String arrivalAirport;
 
-    public FlightDto(Long id, String departure, String arrival) {
+    public FlightDto(Long id, String departureAirport, String arrivalAirport) {
         super(id);
-        this.departure = departure;
-        this.arrival = arrival;
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
     }
 }

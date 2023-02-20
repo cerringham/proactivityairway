@@ -5,15 +5,17 @@ import it.proactivity.proactivityairway.model.*;
 import it.proactivity.proactivityairway.model.dto.*;
 import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.service.*;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -49,6 +51,8 @@ class ProactivityairwayApplicationTests {
 
     @Autowired
     TicketRepository ticketRepository;
+    @Autowired
+    private FlightRepository flightRepository;
 
 
     @Test
@@ -457,7 +461,7 @@ class ProactivityairwayApplicationTests {
     @Test
     void insertNewFleetPositiveTest() {
         Long numberOfFleetBeforeInsert = fleetRepository.findAll().stream().count();
-        FleetDto fleetDto = new FleetDto("Airbus a400",400,5);
+        FleetDto fleetDto = new FleetDto("Boeing 787",400,5);
 
         fleetService.insertFleet(fleetDto);
 
@@ -520,4 +524,36 @@ class ProactivityairwayApplicationTests {
 
         assertTrue(numberOfTicketBeforeInsert < numberOfTicketAfterInsert);
     }
+
+
+
+    @Test
+    void test2() {
+
+        ZonedDateTime dataMilano = ZonedDateTime.of(
+                LocalDateTime.now(), // data e ora
+                ZoneId.of("Europe/Rome") // fuso orario di Milano
+        );
+
+// Creare una data con il fuso orario di New York
+        ZonedDateTime dataNewYork = ZonedDateTime.of(
+                LocalDateTime.now(), // data e ora
+                ZoneId.of("America/New_York") // fuso orario di New York
+        );
+
+
+        //1997-07-16T19:20:30.45+01:00
+
+        LocalDate date = LocalDate.now();
+        System.out.println(date);
+
+        System.out.println(dataMilano);
+
+
+        System.out.println(dataNewYork);
+
+        Duration diff = Duration.between(dataMilano, dataNewYork);
+        System.out.println(diff.toHours());
+    }
 }
+

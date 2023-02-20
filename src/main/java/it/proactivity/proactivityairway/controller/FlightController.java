@@ -4,6 +4,7 @@ import it.proactivity.proactivityairway.model.Flight;
 import it.proactivity.proactivityairway.model.dto.BuyTicketDto;
 import it.proactivity.proactivityairway.model.dto.FlightDto;
 import it.proactivity.proactivityairway.model.dto.FlightIdDto;
+import it.proactivity.proactivityairway.model.dto.FlightWithDateDto;
 import it.proactivity.proactivityairway.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,4 +34,12 @@ public class FlightController {
                                          @RequestParam String seat) {
         return flightService.buyFlightStep2(flightIdDto, customerId, seat);
     }
+
+    /*
+    @PostMapping("insert-flight")
+    public ResponseEntity insertFlight(@RequestBody FlightWithDateDto dto) {
+        return flightService.insertFlight(dto);
+    }
+
+     */
 }

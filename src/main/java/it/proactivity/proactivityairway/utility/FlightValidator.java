@@ -18,6 +18,29 @@ public class FlightValidator {
         return true;
     }
 
+    public Boolean validateAirplaneModel(String airplaneModel) {
+        if (StringUtils.isEmpty(airplaneModel)) {
+            throw new IllegalArgumentException("airplaneModel can't be null");
+        }
+        String[] array = airplaneModel.split(" ");
+        if (array[0].equalsIgnoreCase("Boeing")) {
+            if (StringUtils.isNumeric(array[1]) && array[1].length() == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (array[0].equalsIgnoreCase("Airbus") && array[1].length() == 4) {
+            if (StringUtils.isAlpha(array[1].substring(0, 1)) && StringUtils.isNumeric(array[1].substring(1, 4))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
     public Boolean validateCustomerId(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Customer id can't be null");

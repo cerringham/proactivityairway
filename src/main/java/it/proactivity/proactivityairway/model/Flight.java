@@ -38,6 +38,14 @@ public class Flight {
     @JoinColumn(name = "flight_id")
     private List<Ticket> ticketList;
 
+    public Flight(LocalDate flightDate, Route route, Fleet fleet, String departureTime, String arrivalTime) {
+        this.flightDate = flightDate;
+        this.route = route;
+        this.fleet = fleet;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+    }
+
     @Override
     public String toString() {
         return route + "\n" + fleet + "\n" + departureTime + "-" + arrivalTime + " " + flightDate;
