@@ -7,6 +7,7 @@ import it.proactivity.proactivityairway.model.dto.FlightWithDateDto;
 import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.utility.FlightValidator;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
+import it.proactivity.proactivityairway.utility.ZoneIdUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,45 +73,41 @@ public class FlightService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Flight flight = createFlight(route.get(), fleet.get(), dto.getDate(), dto.getDepartureTime(), dto.getArrivalTime());
+        Flight flight = createFlight(route.get(), fleet.get(), dto.getDepartureDate(), dto.getArrivalDate());
         flightRepository.save(flight);
         return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 
-    private Flight createFlight(Route route, Fleet fleet, LocalDate date, String departureTime, String arrivalTime) {
-        String cestsTimeZone = "Europe/Rome";   // CEST
-        LocalDate cestLocalDate = date.atStartOfDay(ZoneId.of(cestsTimeZone)).toLocalDate();
+    private Flight createFlight(Route route, Fleet fleet, LocalDateTime departureDateTime, LocalDateTime arrivalDateTime) {
+
 
         Optional<Airport> departureAirport = airportRepository.findById(route.getDeparture());
         if (departureAirport.isEmpty()) {
             throw new IllegalArgumentException("Departure not found");
         }
 
+        ZoneId departureZone = ZoneIdUtility.getZoneId(departureAirport.get());
+        ZonedDateTime zoneDepartureDateTime = departureDateTime.atZone(departureZone);
+        LocalTime departureTime = zoneDepartureDateTime.toLocalTime();
+
         Optional<Airport> arrivalAirport = airportRepository.findById(route.getArrival());
         if (arrivalAirport.isEmpty()) {
             throw new IllegalArgumentException("Arrival not found");
         }
 
-        if (departureAirport.get().getName().equals("JFK") && arrivalAirport.get().getName().equals("Tokio-Haneda Airport")) {
-            if (fleet.getAirplaneDescription().equals("Boeing 787")) {
-                Flight flight = FlightBuilder.newBuilder(cestLocalDate)
-                        .fleet(fleet)
-                        .route(route)
-                        .arrivalTime(arrivalTime)
-                        .departureTime(departureTime)
-                        .build();
-                return flight;
-            }else {
-                throw new IllegalArgumentException("You can't use other fleet for this flight");
-            }
-        }
+        ZoneId arrivalZone = ZoneIdUtility.getZoneId(arrivalAirport.get());
+        ZonedDateTime zoneArrivalDateTime = arrivalDateTime.atZone(arrivalZone);
+        LocalTime arrivalTime = zoneArrivalDateTime.toLocalTime();
 
-        Flight flight = FlightBuilder.newBuilder(cestLocalDate)
-                .fleet(fleet)
-                .route(route)
+        Flight flight = FlightBuilder.newBuilder(departureDateTime.toLocalDate())
+                .arrivalDate(arrivalDateTime.toLocalDate())
                 .arrivalTime(arrivalTime)
                 .departureTime(departureTime)
+                .fleet(fleet)
+                .route(route)
                 .build();
+
 
         return flight;
     }
@@ -165,7 +161,7 @@ public class FlightService {
                         Integer seatsLeft = f.getFleet().getNumberOfSeat() - f.getTicketList().size();
                         try {
                             fileWriter.write(f.getId() + " " + departure.get().getName() + " "
-                                    + arrival.get().getName() + " " + f.getFlightDate() + " "
+                                    + arrival.get().getName() + " " + f.getDepartureDate() + " "
                                     + f.getFleet().getAirplaneDescription() + " " + f.getTicketList().size() + " "
                                     + seatsLeft + "\n");
                         } catch (IOException ex) {

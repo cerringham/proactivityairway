@@ -5,29 +5,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class FlightWithDateDto extends FlightDto{
 
-   private LocalDate date;
+   private LocalDateTime departureDate;
+
+    private LocalDateTime arrivalDate;
 
    private String airplaneModel;
 
-    private String departureTime;
 
-    private String arrivalTime;
-
-   public FlightWithDateDto(LocalDate date, String departureAirport, String arrivalAirport, String airplaneModel,
-                            String departureTime, String arrivalTime) {
+   public FlightWithDateDto(LocalDateTime departureDate, LocalDateTime arrivalDate, String departureAirport,
+                            String arrivalAirport, String airplaneModel) {
        super(departureAirport, arrivalAirport);
-       this.date = date;
+       this.departureDate = departureDate;
        this.airplaneModel = airplaneModel;
-       this.departureTime = departureTime;
-       this.arrivalTime = arrivalTime;
+       this.arrivalDate = arrivalDate;
+
    }
 
 }

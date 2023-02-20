@@ -24,11 +24,11 @@ public class FlightController {
     }
 
 
-    /*
+
     @PostMapping("insert-flight")
     public ResponseEntity insertFlight(@RequestBody FlightWithDateDto dto) {
         return flightService.insertFlight(dto);
     }
 
-     */
+
 }

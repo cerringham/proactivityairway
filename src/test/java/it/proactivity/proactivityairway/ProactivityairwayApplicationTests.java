@@ -493,6 +493,7 @@ class ProactivityairwayApplicationTests {
         assertTrue(customerBeforeInsert < customerAfterInsert);
     }
 
+    /*
     @Test
     void getTicketListFromCustomerId() {
         ResponseEntity<List<TicketDto>> response = customerService.getTicketListFromCustomerId(3l);
@@ -502,6 +503,8 @@ class ProactivityairwayApplicationTests {
                 .forEach(System.out::println);
 
     }
+
+     */
 
     @Test
     void getFlightDtoListFromCustomerIdDepartureAndArrivalAirportTest() {
@@ -528,32 +531,19 @@ class ProactivityairwayApplicationTests {
 
 
     @Test
-    void test2() {
+    void insertFlightPositiveTest() {
 
-        ZonedDateTime dataMilano = ZonedDateTime.of(
-                LocalDateTime.now(), // data e ora
-                ZoneId.of("Europe/Rome") // fuso orario di Milano
-        );
+        LocalDateTime departureDate = LocalDateTime.now();
 
-// Creare una data con il fuso orario di New York
-        ZonedDateTime dataNewYork = ZonedDateTime.of(
-                LocalDateTime.now(), // data e ora
-                ZoneId.of("America/New_York") // fuso orario di New York
-        );
+        LocalDateTime arrivalDate = LocalDateTime.of(2023,02,21, 18, 0);
+        FlightWithDateDto dto = new FlightWithDateDto(departureDate, arrivalDate, "Milano Malpensa",
+                "Miami International Airport", "Boeing 777");
+        Long numberOfFlightBeforeInsert = fleetRepository.findAll().stream().count();
+        flightService.insertFlight(dto);
 
+        Long numberOfFlightAfterInsert = fleetRepository.findAll().stream().count();
 
-        //1997-07-16T19:20:30.45+01:00
-
-        LocalDate date = LocalDate.now();
-        System.out.println(date);
-
-        System.out.println(dataMilano);
-
-
-        System.out.println(dataNewYork);
-
-        Duration diff = Duration.between(dataMilano, dataNewYork);
-        System.out.println(diff.toHours());
+        assertTrue(numberOfFlightBeforeInsert < numberOfFlightAfterInsert);
     }
 }
 

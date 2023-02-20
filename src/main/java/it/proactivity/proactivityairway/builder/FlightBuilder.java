@@ -5,7 +5,9 @@ import it.proactivity.proactivityairway.model.Flight;
 import it.proactivity.proactivityairway.model.Route;
 
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class FlightBuilder {
 
@@ -13,18 +15,21 @@ public class FlightBuilder {
 
     private Fleet fleet;
 
-    private String departureTime;
+    private LocalTime departureTime;
 
-    private String arrivalTime;
+    private LocalTime arrivalTime;
 
-    private LocalDate flightDate;
+    private LocalDate departureDate;
 
-    private FlightBuilder(LocalDate flightDate) {
-        this.flightDate = flightDate;
+    private LocalDate arrivalDate;
+
+
+    private FlightBuilder(LocalDate departureDate) {
+        this.departureDate = departureDate;
     }
 
-    public static FlightBuilder newBuilder(LocalDate flightDate) {
-        return new FlightBuilder(flightDate);
+    public static FlightBuilder newBuilder(LocalDate departureDate) {
+        return new FlightBuilder(departureDate);
     }
 
     public FlightBuilder route(Route route) {
@@ -37,17 +42,22 @@ public class FlightBuilder {
         return this;
     }
 
-    public FlightBuilder departureTime(String departureTime) {
+    public FlightBuilder departureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
         return this;
     }
 
-    public  FlightBuilder arrivalTime(String arrivalTime) {
+    public  FlightBuilder arrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
         return this;
     }
 
+    public FlightBuilder arrivalDate(LocalDate arrivalDate) {
+        this.arrivalDate = arrivalDate;
+        return this;
+    }
+
     public Flight build() {
-        return new Flight(flightDate, route, fleet, departureTime, arrivalTime);
+        return new Flight(departureDate, arrivalDate, route, fleet, departureTime, arrivalTime);
     }
 }
