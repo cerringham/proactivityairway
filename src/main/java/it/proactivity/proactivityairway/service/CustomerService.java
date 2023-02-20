@@ -74,19 +74,15 @@ public class CustomerService {
         if (customer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<Ticket> customerTicketList = customer.get().getTicketList();
+        List<Ticket> customerTicketList = customerRepository.getPastTicketsFromCustomer(customer.get().getId(), LocalDate.now());
         if (customerTicketList.size() == 0) {
             return ResponseEntity.notFound().build();
         }
         List<TicketDto> ticketDtos = customerTicketList
                 .stream()
-                .filter(t -> ticketIsBefore(t.getFlight().getFlightDate()))
                 .map(t -> new TicketDto(t.getCustomer().getId().toString(), t.getFlight().getId().toString(),
                         t.getSeatCode()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(ticketDtos);
-    }
-    public Boolean ticketIsBefore(LocalDate date) {
-        return date.isBefore(LocalDate.now());
     }
 }

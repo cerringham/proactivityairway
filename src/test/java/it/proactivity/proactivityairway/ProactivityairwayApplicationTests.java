@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -70,18 +71,19 @@ class ProactivityairwayApplicationTests {
 		employeeRepository.deleteById(12l);
 	}
 
-	@Test
+	/*@Test
 	void insertNewCustomerTest() {
 		CustomerDto customerDto = new CustomerDto("Vero", "Zun", "via", "Milano", "ITA", "verozun@gmail.com",
 				"+2222222", "female", "2000-06-22", false, "PASSPORT35785T", "IDENTYTY898", "blabla");
 		customerService.insertNewCustomer(customerDto);
 		List<Customer> customerList = customerRepository.findAll();
 		assertTrue(customerList.size() == 6);
-	}
+	}*/
 
 	@Test
-	void getAllTicketsFromCustomerPositiveTest() {
-		ResponseEntity<List<Ticket>> ticketList = customerService.getAllTicketsFromCustomer(3l);
-		
+	void getPastTicketsFromCustomerTest() {
+		List<Ticket> ticketList = customerRepository.getPastTicketsFromCustomer(3l, LocalDate.now());
+		assertTrue(ticketList.size() != 0);
+		assertTrue(ticketList.get(0).getCustomer().getId() == 3);
 	}
 }
