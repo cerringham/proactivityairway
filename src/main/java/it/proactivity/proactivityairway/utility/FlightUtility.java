@@ -23,23 +23,6 @@ public class FlightUtility {
     AirportRepository airportRepository;
     @Autowired
     RouteRepository routeRepository;
-
-    public Boolean validateFlightRoute(String departureAirport, String arrivalAirport) {
-        if (StringUtils.isEmpty(departureAirport) || StringUtils.isEmpty(arrivalAirport)) {
-            return false;
-        }
-        Optional<Airport> departure = airportRepository.findByName(departureAirport);
-        Optional<Airport> arrival = airportRepository.findByName(arrivalAirport);
-        if (departure == null || arrival == null) {
-            return false;
-        }
-        Optional<Route> route = routeRepository.findByDepartureAndArrival(departure.get().getId(), arrival.get().getId());
-        if (!route.isPresent()) {
-            return false;
-        }
-        return true;
-    }
-
     public Boolean checkSpecialRoute(String departure, String arrival) {
         if (departure == null || arrival == null) {
             return false;

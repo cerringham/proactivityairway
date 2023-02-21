@@ -12,6 +12,7 @@ import it.proactivity.proactivityairway.repository.FlightRepository;
 import it.proactivity.proactivityairway.repository.RouteRepository;
 import it.proactivity.proactivityairway.utility.FlightUtility;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -67,20 +68,20 @@ public class FlightService {
             FileWriter fileWriter = new FileWriter(file);
             flightList.sort(Comparator.comparing(Flight::getDepartureTime));
             flightList.stream()
-                    .forEach(f ->  {
+                    .forEach(f -> {
                         Optional<Airport> departureAirport = airportRepository.findById(f.getRoute().getDeparture());
                         Optional<Airport> arrivalAirport = airportRepository.findById(f.getRoute().getArrival());
                         Integer leftSeats = f.getFleet().getNumberOfSeat() - f.getTicketList().size();
                         try {
                             fileWriter.write(f.getId() + " " + departureAirport.get().getName() + arrivalAirport.get().getName()
-                                    + " "+ f.getDepartureTime() + " " + f.getTicketList() + " " + leftSeats + "\n" );
+                                    + " " + f.getDepartureTime() + " " + f.getTicketList() + " " + leftSeats + "\n");
 
                         } catch (IOException e) {
                             throw new RuntimeException();
                         }
-                    } );
+                    });
             fileWriter.close();
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException();
         }
         return ResponseEntity.ok().build();
@@ -97,25 +98,38 @@ public class FlightService {
     }
 
     public ResponseEntity<List<FlightDto>> buyTicketPartOne(CustomerAndAirportInfoDto customerAndAirportInfoDto) {
-        if (customerAndAirportInfoDto == null) {
+        if (customerAndAirportInfoDto.getCustomerId() == null ||
+                StringUtils.isEmpty(customerAndAirportInfoDto.getDepartureAirport()) ||
+                StringUtils.isEmpty(customerAndAirportInfoDto.getArrivalAirport())) {
             return ResponseEntity.badRequest().build();
         }
         Optional<Customer> customer = customerRepository.findById(customerAndAirportInfoDto.getCustomerId());
         if (!customer.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        // recuperare departureAirportId destinationAirportId
-        // fare una query sulla tabella delle rotte che prende in input gli Id recuperati
-        if (flightUtility.validateFlightRoute(customerAndAirportInfoDto.getDepartureAirport(),
-                customerAndAirportInfoDto.getArrivalAirport())) {
-            Optional<Route> route = routeRepository.findByDepartureAndArrival(customerAndAirportInfoDto.getDepartureAirport(),
-                    customerAndAirportInfoDto.getArrivalAirport());
-            List<Flight> flightList = route.get().getFlightList();
-            List<FlightDto> dtoList = flightList.stream()
-                    .map(f -> new FlightDto(f.getId(), f.getDepartureTime(),  f.getArrivalTime()))
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtoList);
+        Optional<Route> route = getRouteByDepartureAndArrival(customerAndAirportInfoDto.getDepartureAirport(),
+                customerAndAirportInfoDto.getArrivalAirport());
+        if (!route.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.badRequest().build();
+        List<Flight> flightList = route.get().getFlightList();
+        List<FlightDto> dtoList = flightList.stream()
+                .map(f -> new FlightDto(f.getId(), f.getDepartureTime(), f.getArrivalTime()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
+    public Optional<Route> getRouteByDepartureAndArrival(String departure, String arrival) {
+        if (StringUtils.isEmpty(departure) || StringUtils.isEmpty(arrival)) {
+            throw new IllegalArgumentException();
+        }
+        Optional<Airport> departureAirport = airportRepository.findByName(departure);
+        Optional<Airport> arrivalAirport = airportRepository.findByName(arrival);
+        if (departureAirport.isEmpty() || arrivalAirport.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        Optional<Route> route = routeRepository.findByDepartureAndArrival(departureAirport.get().getId(),
+                arrivalAirport.get().getId());
+        return route;
     }
 }
