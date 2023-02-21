@@ -1,9 +1,16 @@
 package it.proactivity.proactivityairway.service;
 
 import it.proactivity.proactivityairway.model.Airport;
+import it.proactivity.proactivityairway.model.Customer;
 import it.proactivity.proactivityairway.model.Flight;
+import it.proactivity.proactivityairway.model.Route;
+import it.proactivity.proactivityairway.model.dto.CustomDto;
+import it.proactivity.proactivityairway.model.dto.FlightDto;
 import it.proactivity.proactivityairway.repository.AirportRepository;
+import it.proactivity.proactivityairway.repository.CustomerRepository;
 import it.proactivity.proactivityairway.repository.FlightRepository;
+import it.proactivity.proactivityairway.repository.RouteRepository;
+import it.proactivity.proactivityairway.utility.FlightUtility;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 //servizio che prese in input due date ("from" e "to") fa i seguenti controlli:
 //from deve essere antecedente a to altrimenti restituisco una ResponseEntity 400 (Bad Request)
@@ -31,6 +39,14 @@ public class FlightService {
     FlightRepository flightRepository;
     @Autowired
     AirportRepository airportRepository;
+    @Autowired
+    CustomerRepository customerRepository;
+
+    @Autowired
+    RouteRepository routeRepository;
+
+    @Autowired
+    FlightUtility flightUtility;
 
     public ResponseEntity getFlightsFromToList(String from, String to) {
         if (from.isEmpty() || to.isEmpty()) {
@@ -78,5 +94,26 @@ public class FlightService {
             return true;
         }
         return false;
+    }
+
+    public ResponseEntity<List<FlightDto>> getFlightListToBuy(CustomDto customDto) {
+        if (customDto == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Customer> customer = customerRepository.findById(customDto.getCustomerId());
+        if (!customer.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        if (flightUtility.validateFlightRoute(customDto.getDepartureAirport(), customDto.getArrivalAirport())) {
+            Optional<Airport> departure = airportRepository.findByName(customDto.getDepartureAirport());
+            Optional<Airport> arrival = airportRepository.findByName(customDto.getArrivalAirport());
+            Optional<Route> route = routeRepository.findByDepartureAndArrival(departure.get().getId(), arrival.get().getId());
+            List<Flight> flightList = route.get().getFlightList();
+            List<FlightDto> dtoList = flightList.stream()
+                    .map(f -> new FlightDto(f.getId(), f.getDepartureTime(),  f.getArrivalTime()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtoList);
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

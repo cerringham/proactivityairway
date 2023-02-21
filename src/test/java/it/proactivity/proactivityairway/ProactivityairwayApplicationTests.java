@@ -1,22 +1,25 @@
 package it.proactivity.proactivityairway;
 
-import it.proactivity.proactivityairway.model.Customer;
+import it.proactivity.proactivityairway.model.Airport;
 import it.proactivity.proactivityairway.model.Employee;
+import it.proactivity.proactivityairway.model.Route;
 import it.proactivity.proactivityairway.model.Ticket;
-import it.proactivity.proactivityairway.model.dto.CustomerDto;
+import it.proactivity.proactivityairway.repository.AirportRepository;
 import it.proactivity.proactivityairway.repository.CustomerRepository;
 import it.proactivity.proactivityairway.repository.EmployeeRepository;
+import it.proactivity.proactivityairway.repository.RouteRepository;
 import it.proactivity.proactivityairway.service.CustomerService;
 import it.proactivity.proactivityairway.service.FleetService;
 import it.proactivity.proactivityairway.service.TicketService;
+import it.proactivity.proactivityairway.utility.FlightUtility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -37,6 +40,15 @@ class ProactivityairwayApplicationTests {
 
 	@Autowired
 	CustomerRepository customerRepository;
+
+	@Autowired
+	AirportRepository airportRepository;
+
+	@Autowired
+	FlightUtility flightUtility;
+
+	@Autowired
+	RouteRepository routeRepository;
 
 	@Test
 	void contextLoads() {
@@ -85,5 +97,26 @@ class ProactivityairwayApplicationTests {
 		List<Ticket> ticketList = customerRepository.getPastTicketsFromCustomer(3l, LocalDate.now());
 		assertTrue(ticketList.size() != 0);
 		assertTrue(ticketList.get(0).getCustomer().getId() == 3);
+	}
+
+	@Test
+	void findByNameTest() {
+		Optional<Airport> airport = airportRepository.findByName("Milano Malpensa");
+		assertTrue(airport.isPresent());
+		assertNotNull(airport);
+	}
+
+	/*@Test
+	void validateFlightRouteTest() {
+		Boolean route = flightUtility.validateFlightRoute("Milano Malpensa", "Logan Airport");
+		assertTrue(route);
+	}*/
+
+	@Test
+	void findByDepartureAndArrivalTest() {
+		Optional<Route> route = routeRepository.findByDepartureAndArrival(1l, 2l);
+		assertTrue(route.isPresent());
+		Optional<Route> route2 = routeRepository.findByDepartureAndArrival(2l, 1l);
+		assertFalse(route2.isPresent());
 	}
 }
