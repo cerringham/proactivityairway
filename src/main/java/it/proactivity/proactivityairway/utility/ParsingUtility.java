@@ -2,6 +2,7 @@ package it.proactivity.proactivityairway.utility;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -27,6 +28,16 @@ public class ParsingUtility {
             String formattedDate = date.format(formatter);
             return formattedDate;
         } catch (DateTimeException e) {
+            return null;
+        }
+    }
+
+    public static String parseTimeToString(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        try {
+            String formattedTime = time.format(formatter);
+            return formattedTime;
+        } catch (DateTimeParseException e) {
             return null;
         }
     }

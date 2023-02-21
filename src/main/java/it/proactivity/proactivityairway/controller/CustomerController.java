@@ -23,13 +23,9 @@ public class CustomerController {
         return customerService.insertCustomer(customerDto);
     }
 
-    /*
+
     @GetMapping("/get-ticket-list/{id}")
     public ResponseEntity<List<TicketDto>> getTicketListFromCustomerId(@PathVariable Long id) {
         return customerService.getTicketListFromCustomerId(id);
     }
-
-     */
-
-
 }

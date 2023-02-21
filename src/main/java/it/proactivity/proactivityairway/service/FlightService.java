@@ -4,6 +4,7 @@ package it.proactivity.proactivityairway.service;
 import it.proactivity.proactivityairway.builder.FlightBuilder;
 import it.proactivity.proactivityairway.model.*;
 import it.proactivity.proactivityairway.model.dto.FlightWithDateDto;
+import it.proactivity.proactivityairway.model.dto.InfoDepartureArrivalFlightDto;
 import it.proactivity.proactivityairway.repository.*;
 import it.proactivity.proactivityairway.utility.FlightValidator;
 import it.proactivity.proactivityairway.utility.ParsingUtility;
@@ -75,6 +76,62 @@ public class FlightService {
         flightRepository.save(flight);
         return ResponseEntity.status(HttpStatus.OK).build();
 
+    }
+
+    public ResponseEntity<List<InfoDepartureArrivalFlightDto>> getDepartureArrivalInfoForAllFlight() {
+
+        List<Flight> flightList = flightRepository.findAll();
+
+        List<InfoDepartureArrivalFlightDto> dtoList = flightList.stream()
+                .map(f -> {
+                    Route route = f.getRoute();
+                    Optional<Airport> departureAirport = airportRepository.findById(route.getDeparture());
+                    Optional<Airport> arrivalAirport = airportRepository.findById(route.getArrival());
+                    Long duration = Duration.between(f.getDepartureTime(), f.getArrivalTime()).toMillis();
+
+                    Double hour = duration / 3600000.0;
+
+                    String departureDate = ParsingUtility.parseDateToString(f.getDepartureDate());
+                    String departureTime = ParsingUtility.parseTimeToString(f.getDepartureTime());
+                    String arrivalDate = ParsingUtility.parseDateToString(f.getArrivalDate());
+                    String arrivalTime = ParsingUtility.parseTimeToString(f.getArrivalTime());
+                    return new InfoDepartureArrivalFlightDto(departureAirport.get().getName(), departureDate, departureTime,
+                            arrivalAirport.get().getName(), arrivalDate, arrivalTime, String.valueOf(hour));
+                }).toList();
+
+        return ResponseEntity.ok(dtoList);
+
+    }
+
+    public ResponseEntity<List<InfoDepartureArrivalFlightDto>> getAllFlightWithDelay() {
+        List<Flight> flightList = flightRepository.findAll();
+
+        List<InfoDepartureArrivalFlightDto> dtoList = flightList.stream()
+                .map(f -> {
+                    Integer random = (int) Math.floor(Math.random() * (5 - 1 + 1) + 1);
+                    Route route = f.getRoute();
+                    Optional<Airport> departureAirport = airportRepository.findById(route.getDeparture());
+                    Optional<Airport> arrivalAirport = airportRepository.findById(route.getArrival());
+                    String departureDate = ParsingUtility.parseDateToString(f.getDepartureDate());
+                    String departureTime = ParsingUtility.parseTimeToString(f.getDepartureTime());
+                    String arrivalDate = ParsingUtility.parseDateToString(f.getArrivalDate());
+                    String arrivalTime = ParsingUtility.parseTimeToString(f.getArrivalTime());
+                    Long duration = Duration.between(f.getDepartureTime(), f.getArrivalTime()).toMillis();
+                    Double hour = duration / 3600000.0;
+                    if (random <= 3) {
+                        return new InfoDepartureArrivalFlightDto(departureAirport.get().getName(), departureDate, departureTime,
+                                arrivalAirport.get().getName(), arrivalDate, arrivalTime, String.valueOf(hour));
+                    } else {
+
+                        InfoDepartureArrivalFlightDto dto = new InfoDepartureArrivalFlightDto(departureAirport.get().getName(),
+                                departureDate, departureTime, arrivalAirport.get().getName(), arrivalDate, arrivalTime,
+                                String.valueOf(hour));
+
+                        dto.setDelay(Duration.between(f.getArrivalTime(), LocalTime.now()).toString());
+                        return dto;
+                    }
+                }).toList();
+        return ResponseEntity.ok(dtoList);
     }
 
     private Flight createFlight(Route route, Fleet fleet, LocalDateTime departureDateTime, LocalDateTime arrivalDateTime) {

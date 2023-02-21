@@ -40,8 +40,6 @@ public class CustomerService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    /*
-
     public ResponseEntity<List<TicketDto>> getTicketListFromCustomerId(Long id) {
         customerValidator.validateId(id);
         Optional<Customer> customer = customerRepository.findByIdAndFetchListOfTicket(id);
@@ -55,15 +53,11 @@ public class CustomerService {
         }
         List<TicketDto> dtoList = ticketList.stream()
                 .filter(t -> customerPredicate.dateBeforeToday(t.getFlight().getDepartureDate()))
-                .map(t -> new TicketDto(t.getFlight().getDepartureTime(),t.getFlight().getArrivalTime(),
+                .map(t -> new TicketDto(t.getFlight().getDepartureTime().toString(), t.getFlight().getArrivalTime().toString(),
                         ParsingUtility.parseDateToString(t.getFlight().getDepartureDate())))
                 .toList();
         return ResponseEntity.ok(dtoList);
     }
-
-     */
-
-
 
     private Customer createCustomer(CustomerDto customerDto) {
         if (customerDto == null) {

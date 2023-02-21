@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.xmlunit.diff.Difference;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -544,6 +545,22 @@ class ProactivityairwayApplicationTests {
         Long numberOfFlightAfterInsert = flightRepository.findAll().stream().count();
 
         assertTrue(numberOfFlightBeforeInsert < numberOfFlightAfterInsert);
+
+    }
+
+    @Test
+    void getDepartureArrivalInfoForAllFlightTest() {
+        ResponseEntity<List<InfoDepartureArrivalFlightDto>> response = flightService.getDepartureArrivalInfoForAllFlight();
+        List<InfoDepartureArrivalFlightDto> dtoList = response.getBody();
+        dtoList.stream().forEach(System.out::println);
+    }
+
+    @Test
+    void test() {
+
+        ResponseEntity<List<InfoDepartureArrivalFlightDto>> response = flightService.getAllFlightWithDelay();
+        List<InfoDepartureArrivalFlightDto> dtoList = response.getBody();
+        dtoList.stream().forEach(System.out::println);
     }
 }
 

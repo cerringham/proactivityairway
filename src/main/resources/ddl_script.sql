@@ -108,3 +108,6 @@ ALTER COLUMN arrival_time TYPE time USING arrival_time::time without time zone;
 
 ALTER TABLE flight
 ALTER COLUMN departure_time TYPE time USING departure_time::time without time zone;
+
+ALTER TABLE flight
+ADD COLUMN delay TIME without time zone;
