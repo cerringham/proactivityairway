@@ -4,7 +4,7 @@ import it.proactivity.proactivityairway.model.Airport;
 import it.proactivity.proactivityairway.model.Customer;
 import it.proactivity.proactivityairway.model.Flight;
 import it.proactivity.proactivityairway.model.Route;
-import it.proactivity.proactivityairway.model.dto.CustomDto;
+import it.proactivity.proactivityairway.model.dto.CustomerAndAirportInfoDto;
 import it.proactivity.proactivityairway.model.dto.FlightDto;
 import it.proactivity.proactivityairway.repository.AirportRepository;
 import it.proactivity.proactivityairway.repository.CustomerRepository;
@@ -96,18 +96,18 @@ public class FlightService {
         return false;
     }
 
-    public ResponseEntity<List<FlightDto>> getFlightListToBuy(CustomDto customDto) {
-        if (customDto == null) {
+    public ResponseEntity<List<FlightDto>> buyTicketPartOne(CustomerAndAirportInfoDto customerAndAirportInfoDto) {
+        if (customerAndAirportInfoDto == null) {
             return ResponseEntity.badRequest().build();
         }
-        Optional<Customer> customer = customerRepository.findById(customDto.getCustomerId());
+        Optional<Customer> customer = customerRepository.findById(customerAndAirportInfoDto.getCustomerId());
         if (!customer.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        if (flightUtility.validateFlightRoute(customDto.getDepartureAirport(), customDto.getArrivalAirport())) {
-            Optional<Airport> departure = airportRepository.findByName(customDto.getDepartureAirport());
-            Optional<Airport> arrival = airportRepository.findByName(customDto.getArrivalAirport());
-            Optional<Route> route = routeRepository.findByDepartureAndArrival(departure.get().getId(), arrival.get().getId());
+        if (flightUtility.validateFlightRoute(customerAndAirportInfoDto.getDepartureAirport(),
+                customerAndAirportInfoDto.getArrivalAirport())) {
+            Optional<Route> route = routeRepository.findByDepartureAndArrival(customerAndAirportInfoDto.getDepartureAirport(),
+                    customerAndAirportInfoDto.getArrivalAirport());
             List<Flight> flightList = route.get().getFlightList();
             List<FlightDto> dtoList = flightList.stream()
                     .map(f -> new FlightDto(f.getId(), f.getDepartureTime(),  f.getArrivalTime()))

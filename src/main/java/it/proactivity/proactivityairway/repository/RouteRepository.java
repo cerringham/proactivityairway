@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RouteRepository extends JpaRepository<Route, Long> {
     Optional<Route> findByDepartureAndArrival(Long departure, Long arrival);
+
+    Optional<Route> findByDepartureAndArrival(String departure, String arrival);
 }

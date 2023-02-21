@@ -8,6 +8,7 @@ import it.proactivity.proactivityairway.repository.AirportRepository;
 import it.proactivity.proactivityairway.repository.FleetRepository;
 import it.proactivity.proactivityairway.repository.RouteRepository;
 import it.proactivity.proactivityairway.service.FleetService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class FlightUtility {
     RouteRepository routeRepository;
 
     public Boolean validateFlightRoute(String departureAirport, String arrivalAirport) {
-        if (departureAirport == null || arrivalAirport == null) {
+        if (StringUtils.isEmpty(departureAirport) || StringUtils.isEmpty(arrivalAirport)) {
             return false;
         }
         Optional<Airport> departure = airportRepository.findByName(departureAirport);

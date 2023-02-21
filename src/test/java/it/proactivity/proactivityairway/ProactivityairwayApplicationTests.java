@@ -119,4 +119,10 @@ class ProactivityairwayApplicationTests {
 		Optional<Route> route2 = routeRepository.findByDepartureAndArrival(2l, 1l);
 		assertFalse(route2.isPresent());
 	}
+
+	@Test
+	void findByNameAirportTest() {
+		Optional<Airport> airport = airportRepository.findByName("milano malpensa");
+		assertTrue(airport.isPresent());
+	}
 }

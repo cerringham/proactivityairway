@@ -1,7 +1,6 @@
 package it.proactivity.proactivityairway.controller;
 
-import it.proactivity.proactivityairway.model.Flight;
-import it.proactivity.proactivityairway.model.dto.CustomDto;
+import it.proactivity.proactivityairway.model.dto.CustomerAndAirportInfoDto;
 import it.proactivity.proactivityairway.model.dto.FlightDto;
 import it.proactivity.proactivityairway.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class FlightController {
         return flightService.getFlightsFromToList(from, to);
     }
 
-    @GetMapping(value = "/buy-ticket")
-    public ResponseEntity<List<FlightDto>> getFlightListToBuy(@RequestBody CustomDto customDto) {
-        return flightService.getFlightListToBuy(customDto);
+    @GetMapping(value = "/buy-ticket-part-one")
+    public ResponseEntity<List<FlightDto>> buyTicketPartOne(@RequestBody CustomerAndAirportInfoDto customerAndAirportInfoDto) {
+        return flightService.buyTicketPartOne(customerAndAirportInfoDto);
     }
 }
