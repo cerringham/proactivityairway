@@ -104,6 +104,8 @@ public class FlightService {
         if (!customer.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+        // recuperare departureAirportId destinationAirportId
+        // fare una query sulla tabella delle rotte che prende in input gli Id recuperati
         if (flightUtility.validateFlightRoute(customerAndAirportInfoDto.getDepartureAirport(),
                 customerAndAirportInfoDto.getArrivalAirport())) {
             Optional<Route> route = routeRepository.findByDepartureAndArrival(customerAndAirportInfoDto.getDepartureAirport(),
