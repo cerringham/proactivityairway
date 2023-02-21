@@ -30,8 +30,6 @@ public class FlightService {
     @Autowired
     AirportRepository airportRepository;
     @Autowired
-    CustomerRepository customerRepository;
-    @Autowired
     RouteRepository routeRepository;
     @Autowired
     FleetRepository fleetRepository;
@@ -124,7 +122,7 @@ public class FlightService {
             throw new IllegalArgumentException("Arrival not found");
         }
 
-        Optional<Route> route = routeRepository.findByDepartureAndArrival(departureAirport.get().getId(),
+        Optional<Route> route = routeRepository.findByDepartureAndArrivalForFlight(departureAirport.get().getId(),
                 arrivalAirport.get().getId());
 
         return route;

@@ -12,6 +12,12 @@ import java.util.Optional;
 
 @Repository
 public interface RouteRepository extends JpaRepository<Route, Long> {
+
     @Query("SELECT r FROM Route r INNER JOIN FETCH r.flightList WHERE r.departure = :departure AND r.arrival = :arrival")
     Optional<Route> findByDepartureAndArrival(@Param("departure") Long departure, @Param("arrival") Long arrival);
+
+
+
+    @Query("SELECT r FROM Route r  WHERE r.departure = :departure AND r.arrival = :arrival")
+    Optional<Route> findByDepartureAndArrivalForFlight(@Param("departure") Long departure, @Param("arrival") Long arrival);
 }

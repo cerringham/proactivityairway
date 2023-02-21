@@ -538,10 +538,10 @@ class ProactivityairwayApplicationTests {
         LocalDateTime arrivalDate = LocalDateTime.of(2023,02,21, 18, 0);
         FlightWithDateDto dto = new FlightWithDateDto(departureDate, arrivalDate, "Milano Malpensa",
                 "Miami International Airport", "Boeing 777");
-        Long numberOfFlightBeforeInsert = fleetRepository.findAll().stream().count();
+        Long numberOfFlightBeforeInsert = flightRepository.findAll().stream().count();
         flightService.insertFlight(dto);
 
-        Long numberOfFlightAfterInsert = fleetRepository.findAll().stream().count();
+        Long numberOfFlightAfterInsert = flightRepository.findAll().stream().count();
 
         assertTrue(numberOfFlightBeforeInsert < numberOfFlightAfterInsert);
     }
